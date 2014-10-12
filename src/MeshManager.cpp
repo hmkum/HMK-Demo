@@ -8,29 +8,29 @@ MeshManager::MeshManager()
 
 MeshManager::~MeshManager()
 {
-	for(auto mesh : m_Meshes)
+	for(auto mesh : m_meshes)
 		delete mesh;
 }
 
-void MeshManager::Add(Mesh *mesh)
+void MeshManager::add(Mesh *mesh)
 {
-	m_Meshes.push_back(mesh);
+	m_meshes.push_back(mesh);
 }
 
-void MeshManager::Render()
+void MeshManager::render()
 {
-	for(const auto mesh : m_Meshes)
+	for(const auto mesh : m_meshes)
 	{
-		mesh->Render();
+		mesh->render();
 	}
 }
 
-Mesh &MeshManager::GetLast()
+Mesh &MeshManager::getLast()
 {
-	return *m_Meshes[m_Meshes.size() - 1];
+	return *m_meshes[m_meshes.size() - 1];
 }
 
-Mesh &MeshManager::Get(unsigned int index)
+Mesh &MeshManager::get(unsigned int index)
 {
-	return *m_Meshes[index];
+	return *m_meshes[index];
 }

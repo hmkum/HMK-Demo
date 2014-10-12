@@ -6,7 +6,7 @@
 
 using namespace hmk;
 
-bool Terrain::Load(std::string heightMap)
+bool Terrain::load(std::string heightMap)
 {
 	Magick::Blob blob;
 	try {
@@ -26,9 +26,6 @@ bool Terrain::Load(std::string heightMap)
 	m_widthScale = 2.0f;
 
 	unsigned r, g, b;
-	//unsigned int tri = 0;
-	//glm::vec3 triangle[3];
-	//std::vector<GLfloat> tmpNorm;
 	for(unsigned int z = 0; z < m_height; z++)
 	{
 		for(unsigned int x = 0; x < m_width; x++)
@@ -49,30 +46,8 @@ bool Terrain::Load(std::string heightMap)
 			m_normals.push_back(1.0f);
 			m_normals.push_back(1.0f);
 			m_normals.push_back(1.0f);
-
-			/*
-			if(tri == 3)
-			{
-				// Calculate normal
-				auto U = triangle[1] - triangle[0];
-				auto V = triangle[2] - triangle[0];
-				glm::vec3 norm = glm::normalize(glm::cross(U, V));
-
-				tmpNorm.push_back(norm.x);
-				tmpNorm.push_back(norm.y);
-				tmpNorm.push_back(norm.y);
-				tri = 0;
-			}
-			triangle[tri] = glm::vec3(_x, _y, _z);
-			tri++;
-		*/
 		}
 	}
-
-	//for(int i = 0; i < tmpNorm.size(); i++)
-	//{
-	//	m_normals.push_back(glm::normalize(tmpNorm[i]));
-	//}
 
 	for(auto d : m_vertices)
 		m_vertData.push_back(d);
@@ -111,6 +86,8 @@ bool Terrain::Load(std::string heightMap)
 		}
 	}
 
+	GLuint vbo, ibo;
+
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, m_vertData.size() * sizeof(GLfloat), &m_vertData.front(), GL_STATIC_DRAW);
@@ -121,8 +98,8 @@ bool Terrain::Load(std::string heightMap)
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indices.size() * sizeof(GLshort), &m_indices.front(), GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
+	glGenVertexArrays(1, &m_vao);
+	glBindVertexArray(m_vao);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glEnableVertexAttribArray(VertexAttrib::Position);
@@ -140,17 +117,17 @@ bool Terrain::Load(std::string heightMap)
 	return true;
 }
 
-void Terrain::Render(GLenum mode)
+void Terrain::render(GLenum mode)
 {
-	hmk::ShaderManager::GetInstance()->Use("basic");
-	GLint modelMatrixLoc = hmk::ShaderManager::GetInstance()->GetUniform("modelToWorldMatrix");
+	hmk::ShaderManager::getInstance()->use("basic");
+	GLint modelMatrixLoc = hmk::ShaderManager::getInstance()->getUniform("modelToWorldMatrix");
 	glUniformMatrix4fv(modelMatrixLoc, 1, GL_FALSE, glm::value_ptr(glm::mat4(1.0f)));
-	tex->Bind();
-	GLint texLoc = hmk::ShaderManager::GetInstance()->GetUniform("tex");
+	tex->bind();
+	GLint texLoc = hmk::ShaderManager::getInstance()->getUniform("tex");
 	glUniform1i(texLoc, 0);
-	glBindVertexArray(vao);
+	glBindVertexArray(m_vao);
 	glDrawElements(mode, (GLsizei)m_indices.size(), GL_UNSIGNED_INT, 0);
-	tex->Unbind();
+	tex->unbind();
 	glBindVertexArray(0);
 }
 

@@ -13,8 +13,8 @@ namespace hmk
 		Terrain() {}
 		~Terrain() { delete tex;}
 
-		bool Load(std::string heightMap);
-		void Render(GLenum mode);
+		bool load(std::string heightMap);
+		void render(GLenum mode);
 	private:
 		unsigned char *m_data;
 		std::vector<GLfloat> m_vertData;
@@ -25,7 +25,8 @@ namespace hmk
 		Texture *tex;
 		unsigned int m_width, m_height, m_lenght;
 		float m_heightScale, m_widthScale;
-		GLuint vao, vbo, ibo;
+		GLuint m_vao;
+
 		void getPixel(int x, int y, unsigned &r, unsigned &g, unsigned &b);
 	};
 }

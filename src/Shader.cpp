@@ -24,26 +24,27 @@ Shader Shader::createFromFile(std::string filePath, GLenum shaderType)
 Shader::Shader(std::string shaderCode, GLenum shaderType, std::string filePath)
 {
     // Create shader object
-	shaderID = 0;
-    shaderID = glCreateShader(shaderType);
-    if(shaderID == 0)
+	m_shaderID = 0;
+    m_shaderID = glCreateShader(shaderType);
+    if(m_shaderID == 0)
         throw std::runtime_error(ERROR + "glCreateShader failed\n");
 
     // set the source code
     const char *code = shaderCode.c_str();
-    glShaderSource(shaderID, 1, &code, nullptr);
+    glShaderSource(m_shaderID, 1, &code, nullptr);
 
     // compile shader
-    glCompileShader(shaderID);
+    glCompileShader(m_shaderID);
 
     // Check the result of the compilation
     GLint result;
-    glGetShaderiv(shaderID, GL_COMPILE_STATUS, &result);
+    glGetShaderiv(m_shaderID, GL_COMPILE_STATUS, &result);
     if(!result)
     {
         std::vector<char> log(512);
-        glGetShaderInfoLog(shaderID, log.size(), nullptr, &log[0]);
-        glDeleteShader(shaderID); shaderID = 0;
+        glGetShaderInfoLog(m_shaderID, log.size(), nullptr, &log[0]);
+        glDeleteShader(m_shaderID);
+	    m_shaderID = 0;
         throw std::runtime_error(std::string(ERROR + "Shader compilation failed with this message("+filePath+"):\n") + &log[0]);
     }
 }
@@ -52,7 +53,7 @@ Shader::~Shader()
 {
 }
 
-GLuint Shader::GetShader() const
+GLuint Shader::getShader() const
 {
-    return shaderID;
+    return m_shaderID;
 }

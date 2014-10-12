@@ -5,51 +5,60 @@
 #include <iostream>
 #include "Game.h"
 #include <GLFW/glfw3.h>
+#include <stdio.h>  /* defines FILENAME_MAX */
+#ifdef WINDOWS
+    #include <direct.h>
+    #define GetCurrentDir _getcwd
+#else
+#include <unistd.h>
+#define GetCurrentDir getcwd
+#endif
 
 class Application
 {
 public:
 
-    bool CreateWindow(int _width, int _height, std::string _title, bool _isFullScreen);
-    void DestroyWindow();
-    void SetGame(Game *_game);
-    void Loop();
-    float GetDeltaTime() const;
-    int GetFps() const;
-    GLFWwindow *GetWindow() const;
-    static Application *GetInstance();
+    bool createWindow(int width, int height, std::string title, bool isFullScreen);
+    void destroyWindow();
+    void setGame(Game *game);
+    void loop();
+    float getDeltaTime() const;
+    int getFps() const;
+    GLFWwindow *getWindow() const;
+	std::string getWorkingDirectory();
+    static Application *getInstance();
 
-    virtual void KeyCallbackImpl(GLFWwindow *window, int key, int scancode, int action, int mods);
-    void EnableKeyCallback();
+    virtual void keyCallbackImpl(GLFWwindow *window, int key, int scancode, int action, int mods);
+    void enableKeyCallback();
 
-    virtual void CursorEnterCallbackImpl(GLFWwindow *window, int entered);
-    void EnableCursorEnterCallback();
+    virtual void cursorEnterCallbackImpl(GLFWwindow *window, int entered);
+    void enableCursorEnterCallback();
 
-    virtual void CursorPosCallbackImpl(GLFWwindow *window, double xPos, double yPos);
-    void EnableCursorPosCallback();
+    virtual void cursorPosCallbackImpl(GLFWwindow *window, double xPos, double yPos);
+    void enableCursorPosCallback();
 
-    virtual void MouseButtonCallbackImpl(GLFWwindow *window, int button, int action, int mods);
-    void EnableMouseButtonCallback();
+    virtual void mouseButtonCallbackImpl(GLFWwindow *window, int button, int action, int mods);
+    void enableMouseButtonCallback();
 
-    virtual void ScrollCallbackImpl(GLFWwindow *window, double xOffset, double yOffset);
-    void EnableScrollCallback();
+    virtual void scrollCallbackImpl(GLFWwindow *window, double xOffset, double yOffset);
+    void enableScrollCallback();
 
-    virtual void ResizeWindowImpl(GLFWwindow *window, int width, int height);
-    void EnableResizeWindowCallback();
+    virtual void resizeWindowImpl(GLFWwindow *window, int width, int height);
+    void enableResizeWindowCallback();
 private:
     // Singleton
     Application() {}
     Application(const Application&) {}
     void operator= (const Application&) {}
-    static Application *instance;
+    static Application *m_instance;
 
-    Game *game;
-    GLFWwindow *mainWindow;
-    int width, height;
-    std::string title;
-    int frame;
-    int FPS;
-    double time;
-    float deltaTime;
-	bool isFullScreen;
+    Game *m_game;
+    GLFWwindow *m_mainWindow;
+    int m_width, m_height;
+    std::string m_title;
+    int m_frame;
+    int m_FPS;
+    double m_time;
+    float m_deltaTime;
+	bool m_isFullScreen;
 };

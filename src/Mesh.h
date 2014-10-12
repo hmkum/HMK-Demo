@@ -18,31 +18,31 @@ namespace hmk
 		Mesh(const Mesh &other);
 	    const Mesh& operator=(const Mesh&);
 
-	    bool LoadMesh(const std::string &meshName);
-	    void Render();
-	    void Render(GLuint texID);
-		Mesh* Copy();
+	    bool loadMesh(const std::string &meshName);
+	    void render();
+	    void render(GLuint texID);
+		Mesh* copy();
 
-	    Mesh &SetPosition(glm::vec3 _pos);
-	    Mesh &OffsetPosition(glm::vec3 _pos);
-		Mesh &SetRotation(float _angle, glm::vec3 _rot);
-	    Mesh &OffsetRotation(float _angle, glm::vec3 _rot);
-		Mesh &SetScale(glm::vec3 _scale);
-	    Mesh &OffsetScale(glm::vec3 _scale);
+	    Mesh &setPosition(glm::vec3 _pos);
+	    Mesh &offsetPosition(glm::vec3 _pos);
+		Mesh &setRotation(float _angle, glm::vec3 _rot);
+	    Mesh &offsetRotation(float _angle, glm::vec3 _rot);
+		Mesh &setScale(glm::vec3 _scale);
+	    Mesh &offsetScale(glm::vec3 _scale);
 
-	    glm::mat4 GetMatrix() const;
-
-    private:
-	    void UpdateModelMatrix();
+	    glm::mat4 getMatrix() const;
 
     private:
-	    glm::mat4 modelMatrix;
-	    glm::vec3 position, rotation, scale;
-	    Texture *tex;
-	    float angle;
-	    GLuint vao, vbo, ibo;
-	    GLsizei indexCount;
-	    GLenum renderMode;
-	    bool matrixUpdateNeed;
+	    void updateModelMatrix();
+
+    private:
+	    glm::mat4 m_modelMatrix;
+	    glm::vec3 m_position, m_rotation, m_scale;
+	    Texture *m_tex;
+	    float m_angle;
+	    GLuint m_vao, m_vbo, m_ibo;
+	    GLsizei m_indexCount;
+	    GLenum m_renderMode;
+	    bool m_matrixUpdateNeed;
     };
 }

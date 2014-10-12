@@ -6,7 +6,7 @@ using namespace hmk;
 
 ModelLoader::ModelLoader()
 {
-    renderMode = GL_TRIANGLES;
+    m_renderMode = GL_TRIANGLES;
 }
 
 ModelLoader::~ModelLoader()
@@ -14,7 +14,7 @@ ModelLoader::~ModelLoader()
 
 }
 
-bool ModelLoader::LoadOBJFile(std::string fileName)
+bool ModelLoader::loadOBJFile(std::string fileName)
 {
 	Assimp::Importer importer;
 	const aiScene *scene = importer.ReadFile(fileName, aiProcess_FlipWindingOrder | aiProcess_CalcTangentSpace |
@@ -22,7 +22,7 @@ bool ModelLoader::LoadOBJFile(std::string fileName)
 
 	if(scene)
 	{
-		return InitScene(scene, fileName);
+		return initScene(scene, fileName);
 	}
 	else
 	{
@@ -31,24 +31,24 @@ bool ModelLoader::LoadOBJFile(std::string fileName)
 	}
 }
 
-bool ModelLoader::InitScene(const aiScene *scene, const std::string &filename)
+bool ModelLoader::initScene(const aiScene *scene, const std::string &filename)
 {
 	// Initialize the meshes in the scene one by one
 	for (unsigned int i = 0 ; i < scene->mNumMeshes ; i++)
 	{
 		const aiMesh* mesh = scene->mMeshes[i];
-		InitMesh(i, mesh);
+		initMesh(i, mesh);
 	}
-	for(auto &x : vertexPositions)
-		vertexData.push_back(x);
-	for(auto &x : vertexTexCoords)
-		vertexData.push_back(x);
-	for(auto &x : vertexNormals)
-		vertexData.push_back(x);
-	return InitMaterials(scene, filename);
+	for(auto &x : m_vertexPositions)
+		m_vertexData.push_back(x);
+	for(auto &x : m_vertexTexCoords)
+		m_vertexData.push_back(x);
+	for(auto &x : m_vertexNormals)
+		m_vertexData.push_back(x);
+	return initMaterials(scene, filename);
 }
 
-void ModelLoader::InitMesh(unsigned int index, const aiMesh *mesh)
+void ModelLoader::initMesh(unsigned int index, const aiMesh *mesh)
 {
 	const aiVector3D zero3D(0.0f, 0.0f, 0.0f);
 	const aiVector3D one3D(1.0f, 1.0f, 1.0f);
@@ -59,29 +59,29 @@ void ModelLoader::InitMesh(unsigned int index, const aiMesh *mesh)
 		const aiVector3D *normal = mesh->HasNormals() ? &(mesh->mNormals[i]): &one3D;
 		const aiVector3D *tex = mesh->HasTextureCoords(0) ? &(mesh->mTextureCoords[0][i]) : &zero3D;
 
-		vertexPositions.push_back(pos->x);
-		vertexPositions.push_back(pos->y);
-		vertexPositions.push_back(pos->z);
+		m_vertexPositions.push_back(pos->x);
+		m_vertexPositions.push_back(pos->y);
+		m_vertexPositions.push_back(pos->z);
 
-		vertexTexCoords.push_back(tex->x);
-		vertexTexCoords.push_back(tex->y);
+		m_vertexTexCoords.push_back(tex->x);
+		m_vertexTexCoords.push_back(tex->y);
 
-		vertexNormals.push_back(normal->x);
-		vertexNormals.push_back(normal->y);
-		vertexNormals.push_back(normal->z);
+		m_vertexNormals.push_back(normal->x);
+		m_vertexNormals.push_back(normal->y);
+		m_vertexNormals.push_back(normal->z);
 	}
 
 	for(unsigned int i = 0; i < mesh->mNumFaces; i++)
 	{
 		const aiFace &face = mesh->mFaces[i];
-		renderMode = GL_TRIANGLES;
-		vertexIndices.push_back(face.mIndices[0]);
-		vertexIndices.push_back(face.mIndices[1]);
-		vertexIndices.push_back(face.mIndices[2]);
+		m_renderMode = GL_TRIANGLES;
+		m_vertexIndices.push_back(face.mIndices[0]);
+		m_vertexIndices.push_back(face.mIndices[1]);
+		m_vertexIndices.push_back(face.mIndices[2]);
 	}
 }
 
-bool ModelLoader::InitMaterials(const aiScene *scene, const std::string &filename)
+bool ModelLoader::initMaterials(const aiScene *scene, const std::string &filename)
 {
 	bool ret = true;
 
@@ -91,66 +91,66 @@ bool ModelLoader::InitMaterials(const aiScene *scene, const std::string &filenam
 
 		aiString path;
 		if(material->GetTexture(aiTextureType_DIFFUSE, 0, &path) == AI_SUCCESS)
-			textureName = path.data;
+			m_textureName = path.data;
 		else
-			textureName = "default.png";
+			m_textureName = "default.png";
 	}
 
 	return ret;
 }
 
-std::vector<float> ModelLoader::GetVertexData() const
+std::vector<float> ModelLoader::getVertexData() const
 {
-	return vertexData;
+	return m_vertexData;
 }
 
-std::vector<short> ModelLoader::GetVertexIndices() const
+std::vector<short> ModelLoader::getVertexIndices() const
 {
-    return vertexIndices;
+    return m_vertexIndices;
 }
 
-std::vector<float> ModelLoader::GetNormals() const
+std::vector<float> ModelLoader::getNormals() const
 {
-	return vertexNormals;
+	return m_vertexNormals;
 }
 
-std::size_t ModelLoader::GetTexCoordsSize() const
+std::size_t ModelLoader::getTexCoordsSize() const
 {
-	return vertexTexCoords.size() * sizeof(float);
+	return m_vertexTexCoords.size() * sizeof(float);
 }
 
-std::size_t ModelLoader::GetNormalSize() const
+std::size_t ModelLoader::getNormalSize() const
 {
-	return vertexNormals.size() * sizeof(float);
+	return m_vertexNormals.size() * sizeof(float);
 }
 
-std::size_t ModelLoader::GetVertexSize() const
+std::size_t ModelLoader::getVertexSize() const
 {
-    return vertexPositions.size() * sizeof(float);
+    return m_vertexPositions.size() * sizeof(float);
 }
 
-std::size_t ModelLoader::GetIndexSize() const
+std::size_t ModelLoader::getIndexSize() const
 {
-    return vertexIndices.size() * sizeof(std::size_t);
+    return m_vertexIndices.size() * sizeof(std::size_t);
 }
 
-std::size_t ModelLoader::GetVertexCount() const
+std::size_t ModelLoader::getVertexCount() const
 {
-    return vertexPositions.size();
+    return m_vertexPositions.size();
 }
 
-GLsizei ModelLoader::GetIndexCount()
+GLsizei ModelLoader::getIndexCount()
 {
-    return vertexIndices.size();
+    return m_vertexIndices.size();
 }
 
-GLenum ModelLoader::GetRenderMode() const
+GLenum ModelLoader::getRenderMode() const
 {
-    return renderMode;
+    return m_renderMode;
 }
 
 
-std::string ModelLoader::GetTextureName() const
+std::string ModelLoader::getTextureName() const
 {
-	return textureName;
+	return m_textureName;
 }

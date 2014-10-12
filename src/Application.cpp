@@ -3,18 +3,18 @@
 #include <stdexcept>
 #include <chrono>
 
-Application* Application::instance = nullptr;
+Application* Application::m_instance = nullptr;
 
 /**
  * @brief Create main window
  * @return true if window creation is succeded, otherwise false
  */
-bool Application::CreateWindow(int _width, int _height, std::string _title, bool _isFullScreen)
+bool Application::createWindow(int width, int height, std::string title, bool isFullScreen)
 {
-    width        = _width;
-    height       = _height;
-    title        = _title;
-    isFullScreen = _isFullScreen;
+    m_width        = width;
+	m_height       = height;
+	m_title        = title;
+	m_isFullScreen = isFullScreen;
 
     if(!glfwInit())
         throw std::runtime_error(ERROR + "glfwInit failed");
@@ -24,91 +24,98 @@ bool Application::CreateWindow(int _width, int _height, std::string _title, bool
 	glfwWindowHint(GLFW_SAMPLES, 4);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    if(isFullScreen)
-        mainWindow = glfwCreateWindow(width, height, title.c_str(), glfwGetPrimaryMonitor(), nullptr);
+    if(m_isFullScreen)
+	    m_mainWindow = glfwCreateWindow(m_width, m_height, m_title.c_str(), glfwGetPrimaryMonitor(), nullptr);
     else
-        mainWindow = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
+	    m_mainWindow = glfwCreateWindow(m_width, m_height, m_title.c_str(), nullptr, nullptr);
 
-    if(!mainWindow)
+    if(!m_mainWindow)
     {
         glfwTerminate();
         throw std::runtime_error(ERROR + "glfwCreateWindow failed");
     }
 
     // Making the OpenGL context current
-    glfwMakeContextCurrent(mainWindow);
+    glfwMakeContextCurrent(m_mainWindow);
 
-    glfwSetInputMode(mainWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetInputMode(m_mainWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     return true;
 }
 
-void Application::DestroyWindow()
+void Application::destroyWindow()
 {
-    if(mainWindow)
-        glfwDestroyWindow(mainWindow);
+    if(m_mainWindow)
+        glfwDestroyWindow(m_mainWindow);
     glfwTerminate();
     exit(EXIT_SUCCESS);
 }
 
-void Application::SetGame(Game *_game)
+void Application::setGame(Game *game)
 {
-    assert(_game != nullptr);
-    game = _game;
+    assert(game != nullptr);
+	m_game = game;
 }
 
-void Application::Loop()
+void Application::loop()
 {
-    game->Start();
-    frame = 0;
-    time = 0.0;
-    while(!glfwWindowShouldClose(mainWindow))
+	m_game->Start();
+	m_frame = 0;
+	m_time = 0.0;
+    while(!glfwWindowShouldClose(m_mainWindow))
     {
         std::chrono::time_point<std::chrono::system_clock> start = std::chrono::system_clock::now();
 
-        game->Loop();
-        glfwSwapBuffers(mainWindow);
+	    m_game->Loop();
+        glfwSwapBuffers(m_mainWindow);
         glfwPollEvents();
 
         std::chrono::time_point<std::chrono::system_clock> end = std::chrono::system_clock::now();
         std::chrono::duration<double> elapsed = end - start;
 
-        frame++;
-        time += elapsed.count();
-        deltaTime = elapsed.count();
+	    m_frame++;
+	    m_time += elapsed.count();
+	    m_deltaTime = elapsed.count();
 
-        if(time >= 1.0)
+        if(m_time >= 1.0)
         {
-            FPS = frame;
+	        m_FPS = m_frame;
             std::string title = "HMK - FPS: ";
-            title += std::to_string(FPS);
-            glfwSetWindowTitle(Application::GetInstance()->GetWindow(), title.c_str());
-            time = 0;
-            frame = 0;
+            title += std::to_string(m_FPS);
+            glfwSetWindowTitle(Application::getInstance()->getWindow(), title.c_str());
+	        m_time = 0;
+	        m_frame = 0;
         }
     }
 }
 
-float Application::GetDeltaTime() const
+float Application::getDeltaTime() const
 {
-    return deltaTime;
+    return m_deltaTime;
 }
 
-int Application::GetFps() const
+int Application::getFps() const
 {
-    return FPS;
+    return m_FPS;
 }
 
-GLFWwindow *Application::GetWindow() const
+GLFWwindow *Application::getWindow() const
 {
-    return mainWindow;
+    return m_mainWindow;
 }
 
-Application *Application::GetInstance()
+std::string Application::getWorkingDirectory()
 {
-    if(!instance)
-        instance = new Application();
-    return instance;
+	char currPath[FILENAME_MAX];
+	GetCurrentDir(currPath, sizeof(currPath));
+	return std::string(currPath);
+}
+
+Application *Application::getInstance()
+{
+    if(!m_instance)
+	    m_instance = new Application();
+    return m_instance;
 }
 
 // ##################### Input Handling Callback Functions ############################
@@ -116,95 +123,95 @@ Application *Application::GetInstance()
 // These are the callback functions for cursor enter/leave window
 static void CursorEnterCallback(GLFWwindow* window, int entered)
 {
-    Application::GetInstance()->CursorEnterCallbackImpl(window, entered);
+	Application::getInstance()->cursorEnterCallbackImpl(window, entered);
 }
 
-void Application::CursorEnterCallbackImpl(GLFWwindow* window, int entered)
+void Application::cursorEnterCallbackImpl(GLFWwindow *window, int entered)
 {
-    game->OnCursorEnter(window, entered);
+	m_game->OnCursorEnter(window, entered);
 }
 
-void Application::EnableCursorEnterCallback()
+void Application::enableCursorEnterCallback()
 {
-    glfwSetCursorEnterCallback(mainWindow, CursorEnterCallback);
+    glfwSetCursorEnterCallback(m_mainWindow, CursorEnterCallback);
 }
 
 // These are the callback functions for keyboard handling
 static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-    Application::GetInstance()->KeyCallbackImpl(window, key, scancode, action, mods);
+	Application::getInstance()->keyCallbackImpl(window, key, scancode, action, mods);
 }
 
-void Application::KeyCallbackImpl(GLFWwindow* window, int key, int scancode, int action, int mods)
+void Application::keyCallbackImpl(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
-    game->OnKey(window, key, scancode, action, mods);
+	m_game->OnKey(window, key, scancode, action, mods);
 }
 
-void Application::EnableKeyCallback()
+void Application::enableKeyCallback()
 {
-    glfwSetKeyCallback(mainWindow, KeyCallback);
+    glfwSetKeyCallback(m_mainWindow, KeyCallback);
 }
 
 // These are the callback functions for cursor position
 static void CursorPosCallback(GLFWwindow *window, double xPos, double yPos)
 {
-    Application::GetInstance()->CursorPosCallbackImpl(window, xPos, yPos);
+	Application::getInstance()->cursorPosCallbackImpl(window, xPos, yPos);
 }
 
-void Application::CursorPosCallbackImpl(GLFWwindow *window, double xPos, double yPos)
+void Application::cursorPosCallbackImpl(GLFWwindow *window, double xPos, double yPos)
 {
-    game->OnCursorPos(window, xPos, yPos);
+	m_game->OnCursorPos(window, xPos, yPos);
 }
 
-void Application::EnableCursorPosCallback()
+void Application::enableCursorPosCallback()
 {
-    glfwSetCursorPosCallback(mainWindow, CursorPosCallback);
+    glfwSetCursorPosCallback(m_mainWindow, CursorPosCallback);
 }
 
 // These are the callback functions for mouse button actions
 static void MouseButtonCallback(GLFWwindow *window, int button, int action, int mods)
 {
-    Application::GetInstance()->MouseButtonCallbackImpl(window, button, action, mods);
+	Application::getInstance()->mouseButtonCallbackImpl(window, button, action, mods);
 }
 
-void Application::MouseButtonCallbackImpl(GLFWwindow *window, int button, int action, int mods)
+void Application::mouseButtonCallbackImpl(GLFWwindow *window, int button, int action, int mods)
 {
-    game->OnMouseButton(window, button, action, mods);
+	m_game->OnMouseButton(window, button, action, mods);
 }
 
-void Application::EnableMouseButtonCallback()
+void Application::enableMouseButtonCallback()
 {
-    glfwSetMouseButtonCallback(mainWindow, MouseButtonCallback);
+    glfwSetMouseButtonCallback(m_mainWindow, MouseButtonCallback);
 }
 
 // These are the callback functions for scroll
 
 static void ScrollCallback(GLFWwindow *window, double xOffset, double yOffset)
 {
-    Application::GetInstance()->ScrollCallbackImpl(window, xOffset, yOffset);
+	Application::getInstance()->scrollCallbackImpl(window, xOffset, yOffset);
 }
 
-void Application::ScrollCallbackImpl(GLFWwindow *window, double xOffset, double yOffset)
+void Application::scrollCallbackImpl(GLFWwindow *window, double xOffset, double yOffset)
 {
-    game->OnScroll(window, xOffset, yOffset);
+	m_game->OnScroll(window, xOffset, yOffset);
 }
 
-void Application::EnableScrollCallback()
+void Application::enableScrollCallback()
 {
-    glfwSetScrollCallback(mainWindow, ScrollCallback);
+    glfwSetScrollCallback(m_mainWindow, ScrollCallback);
 }
 
 static void ResizeWindowCallback(GLFWwindow *window, int width, int height)
 {
-    Application::GetInstance()->ResizeWindowImpl(window, width, height);
+	Application::getInstance()->resizeWindowImpl(window, width, height);
 }
 
-void Application::ResizeWindowImpl(GLFWwindow *window, int width, int height)
+void Application::resizeWindowImpl(GLFWwindow *window, int width, int height)
 {
-    game->OnResize(window, width, height);
+	m_game->OnResize(window, width, height);
 }
 
-void Application::EnableResizeWindowCallback()
+void Application::enableResizeWindowCallback()
 {
-    glfwSetFramebufferSizeCallback(mainWindow, ResizeWindowCallback);
+    glfwSetFramebufferSizeCallback(m_mainWindow, ResizeWindowCallback);
 }

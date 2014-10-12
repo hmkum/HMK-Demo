@@ -1,8 +1,5 @@
 #pragma once
 #include <string>
-#include <libgen.h>
-#include <linux/limits.h>
-#include <unistd.h>
 
 enum VertexAttrib{Position = 0, Color, TexCoord, Normal};
 #define PATH std::string("/home/kum/Dev/Projects/Opengl/kum/kum/") // FIX: working directory

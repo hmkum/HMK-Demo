@@ -4,70 +4,70 @@
 
 using namespace hmk;
 
-ShaderManager* ShaderManager::m_Instance = nullptr;
+ShaderManager* ShaderManager::m_instance = nullptr;
 
-ShaderManager* ShaderManager::GetInstance()
+ShaderManager* ShaderManager::getInstance()
 {
-	if(m_Instance == nullptr)
-		m_Instance = new ShaderManager();
-	return m_Instance;
+	if(m_instance == nullptr)
+		m_instance = new ShaderManager();
+	return m_instance;
 }
 
-void ShaderManager::AddProgram(std::string name, Program *program)
+void ShaderManager::addProgram(std::string name, Program *program)
 {
 	std::map<std::string, Program*> p;
 	p[name] = program;
-	m_Programs.push_back(p);
+	m_programs.push_back(p);
 }
 
-void ShaderManager::Use(std::string name)
+void ShaderManager::use(std::string name)
 {
 	if(name == "")
 	{
 		glUseProgram(0);
 		return ;
 	}
-	for(auto &p : m_Programs)
+	for(auto &p : m_programs)
 	{
 		if(p.find(name) != p.end())
 		{
-			m_Name = name;
-			glUseProgram(p.begin()->second->GetProgram());
+			m_name = name;
+			glUseProgram(p.begin()->second->getProgram());
 		}
 	}
 }
 
-GLuint ShaderManager::GetProgram(std::string name)
+GLuint ShaderManager::getProgram(std::string name)
 {
-	for(auto &p : m_Programs)
+	for(auto &p : m_programs)
 	{
 		if(p.find(name) != p.end())
 		{
-			return (p.begin()->second->GetProgram());
+			return (p.begin()->second->getProgram());
 		}
 	}
 	return 0;
 }
 
-GLint ShaderManager::GetActiveProgram()
+GLint ShaderManager::getActiveProgram()
 {
 	GLint id;
 	glGetIntegerv(GL_CURRENT_PROGRAM, &id);
 	return id;
 }
 
-GLint ShaderManager::GetUniform(std::string name)
+GLint ShaderManager::getUniform(std::string name)
 {
-	GLint id = GetActiveProgram();
+	GLint id = getActiveProgram();
 	auto loc = glGetUniformLocation(id, name.c_str());
 	if(loc == -1)
 		std::cerr << ERROR << "\nError: Could not find uniform \'" << name << "\'" << std::endl;
 	return loc;
 }
 
-bool ShaderManager::SetUniformf(std::string name, float v0)
+bool ShaderManager::setUniformf(std::string name, float v0)
 {
-	GLint loc = GetUniform(name);
+	GLint loc = getUniform(name);
 	if(loc == -1)
 	{
 		std::cerr << ERROR << "\nError: Could not find uniform \'" << name << "\'" << std::endl;
@@ -80,9 +80,9 @@ bool ShaderManager::SetUniformf(std::string name, float v0)
 	}
 }
 
-bool ShaderManager::SetUniformf(std::string name, float v0, float v1)
+bool ShaderManager::setUniformf(std::string name, float v0, float v1)
 {
-	GLint loc = GetUniform(name);
+	GLint loc = getUniform(name);
 	if(loc == -1)
 	{
 		std::cerr << ERROR << "\nError: Could not find uniform \'" << name << "\'" << std::endl;
@@ -95,9 +95,9 @@ bool ShaderManager::SetUniformf(std::string name, float v0, float v1)
 	}
 }
 
-bool ShaderManager::SetUniformf(std::string name, float v0, float v1, float v2)
+bool ShaderManager::setUniformf(std::string name, float v0, float v1, float v2)
 {
-	GLint loc = GetUniform(name);
+	GLint loc = getUniform(name);
 	if(loc == -1)
 	{
 		std::cerr << ERROR << "\nError: Could not find uniform \'" << name << "\'" << std::endl;
@@ -110,9 +110,9 @@ bool ShaderManager::SetUniformf(std::string name, float v0, float v1, float v2)
 	}
 }
 
-bool ShaderManager::SetUniformf(std::string name, float v0, float v1, float v2, float v3)
+bool ShaderManager::setUniformf(std::string name, float v0, float v1, float v2, float v3)
 {
-	GLint loc = GetUniform(name);
+	GLint loc = getUniform(name);
 	if(loc == -1)
 	{
 		std::cerr << ERROR << "\nError: Could not find uniform \'" << name << "\'" << std::endl;
@@ -125,9 +125,9 @@ bool ShaderManager::SetUniformf(std::string name, float v0, float v1, float v2, 
 	}
 }
 
-bool ShaderManager::SetUniformf(std::string name, glm::vec2 v)
+bool ShaderManager::setUniformf(std::string name, glm::vec2 v)
 {
-	GLint loc = GetUniform(name);
+	GLint loc = getUniform(name);
 	if(loc == -1)
 	{
 		std::cerr << ERROR << "\nError: Could not find uniform \'" << name << "\'" << std::endl;
@@ -140,9 +140,9 @@ bool ShaderManager::SetUniformf(std::string name, glm::vec2 v)
 	}
 }
 
-bool ShaderManager::SetUniformf(std::string name, glm::vec3 v)
+bool ShaderManager::setUniformf(std::string name, glm::vec3 v)
 {
-	GLint loc = GetUniform(name);
+	GLint loc = getUniform(name);
 	if(loc == -1)
 	{
 		std::cerr << ERROR << "\nError: Could not find uniform \'" << name << "\'" << std::endl;
@@ -155,9 +155,9 @@ bool ShaderManager::SetUniformf(std::string name, glm::vec3 v)
 	}
 }
 
-bool ShaderManager::SetUniformf(std::string name, glm::vec4 v)
+bool ShaderManager::setUniformf(std::string name, glm::vec4 v)
 {
-	GLint loc = GetUniform(name);
+	GLint loc = getUniform(name);
 	if(loc == -1)
 	{
 		std::cerr << ERROR << "\nError: Could not find uniform \'" << name << "\'" << std::endl;
@@ -170,9 +170,9 @@ bool ShaderManager::SetUniformf(std::string name, glm::vec4 v)
 	}
 }
 
-bool ShaderManager::SetUniformi(std::string name, int v0)
+bool ShaderManager::setUniformi(std::string name, int v0)
 {
-	GLint loc = GetUniform(name);
+	GLint loc = getUniform(name);
 	if(loc == -1)
 	{
 		std::cerr << ERROR << "\nError: Could not find uniform \'" << name << "\'" << std::endl;
@@ -185,9 +185,9 @@ bool ShaderManager::SetUniformi(std::string name, int v0)
 	}
 }
 
-bool ShaderManager::SetUniformi(std::string name, int v0, int v1)
+bool ShaderManager::setUniformi(std::string name, int v0, int v1)
 {
-	GLint loc = GetUniform(name);
+	GLint loc = getUniform(name);
 	if(loc == -1)
 	{
 		std::cerr << ERROR << "\nError: Could not find uniform \'" << name << "\'" << std::endl;
@@ -200,9 +200,9 @@ bool ShaderManager::SetUniformi(std::string name, int v0, int v1)
 	}
 }
 
-bool ShaderManager::SetUniformi(std::string name, int v0, int v1, int v2)
+bool ShaderManager::setUniformi(std::string name, int v0, int v1, int v2)
 {
-	GLint loc = GetUniform(name);
+	GLint loc = getUniform(name);
 	if(loc == -1)
 	{
 		std::cerr << ERROR << "\nError: Could not find uniform \'" << name << "\'" << std::endl;
@@ -215,9 +215,9 @@ bool ShaderManager::SetUniformi(std::string name, int v0, int v1, int v2)
 	}
 }
 
-bool ShaderManager::SetUniformi(std::string name, int v0, int v1, int v2, int v3)
+bool ShaderManager::setUniformi(std::string name, int v0, int v1, int v2, int v3)
 {
-	GLint loc = GetUniform(name);
+	GLint loc = getUniform(name);
 	if(loc == -1)
 	{
 		std::cerr << ERROR << "\nError: Could not find uniform \'" << name << "\'" << std::endl;
@@ -230,9 +230,9 @@ bool ShaderManager::SetUniformi(std::string name, int v0, int v1, int v2, int v3
 	}
 }
 
-bool ShaderManager::SetUniformf(std::string name, glm::mat3 m)
+bool ShaderManager::setUniformf(std::string name, glm::mat3 m)
 {
-	GLint loc = GetUniform(name);
+	GLint loc = getUniform(name);
 	if(loc == -1)
 	{
 		std::cerr << ERROR << "\nError: Could not find uniform \'" << name << "\'" << std::endl;
@@ -245,9 +245,9 @@ bool ShaderManager::SetUniformf(std::string name, glm::mat3 m)
 	}
 }
 
-bool ShaderManager::SetUniformf(std::string name, glm::mat4 m)
+bool ShaderManager::setUniformf(std::string name, glm::mat4 m)
 {
-	GLint loc = GetUniform(name);
+	GLint loc = getUniform(name);
 	if(loc == -1)
 	{
 		std::cerr << ERROR << "\nError: Could not find uniform \'" << name << "\'" << std::endl;

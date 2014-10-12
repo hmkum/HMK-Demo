@@ -8,45 +8,44 @@ namespace hmk {
     public:
         Camera();
 
-        const glm::vec3& GetPosition() const;
-        void SetPosition(const glm::vec3 &_position);
-        void OffsetPosition(const glm::vec3 &offset);
+        const glm::vec3& getPosition() const;
+        void setPosition(const glm::vec3 &_position);
+        void offsetPosition(const glm::vec3 &offset);
 
-        float GetFov() const;
-        void SetFov(float _fov);
+        float getFov() const;
+        void setFov(float _fov);
+
+        float getNearPlane() const;
+        float getFarPlane() const;
+
+        void setNearAndFarPlanes(float _nearPlane, float _farPlane);
+
+        glm::mat4 getOrientation() const;
+
+        void offsetOrientation(float upAngle, float rightAngle);
+
+        void lookAt(glm::vec3 _position);
+
+        float getViewportAspectRatio() const;
+        void setViewportAspectRatio(float _viewportAspectRatio);
+
+        glm::vec3 getForward() const;
+        glm::vec3 getRight() const;
+        glm::vec3 getUp() const;
 
 
-        float GetNearPlane() const;
-        float GetFarPlane() const;
-
-        void SetNearAndFarPlanes(float _nearPlane, float _farPlane);
-
-        glm::mat4 GetOrientation() const;
-
-        void OffsetOrientation(float upAngle, float rightAngle);
-
-        void LookAt(glm::vec3 _position);
-
-        float GetViewportAspectRatio() const;
-        void SetViewportAspectRatio(float _viewportAspectRatio);
-
-        glm::vec3 GetForward() const;
-        glm::vec3 GetRight() const;
-        glm::vec3 GetUp() const;
-
-
-        glm::mat4 GetMatrix() const;
-        glm::mat4 GetProjection() const;
-        glm::mat4 GetView() const;
+        glm::mat4 getMatrix() const;
+        glm::mat4 getProjection() const;
+        glm::mat4 getView() const;
 
     private:
-        glm::vec3 position;
-        float horizontalAngle;
-        float verticalAngle;
-        float fov;
-        float nearPlane;
-        float farPlane;
-        float viewportAspectRatio;
+        glm::vec3 m_position;
+        float m_horizontalAngle;
+        float m_verticalAngle;
+        float m_fov;
+        float m_nearPlane;
+        float m_farPlane;
+        float m_viewportAspectRatio;
 
         void NormalizeAngles();
     };

@@ -15,19 +15,19 @@ int main(int argc, char **argv)
 	Game *game = new Game();
 
     string windowTitle = "HMK";
-    Application::GetInstance()->CreateWindow(WIDTH, HEIGHT, windowTitle, false);
+    Application::getInstance()->createWindow(WIDTH, HEIGHT, windowTitle, false);
 
     glewExperimental = true;
     if(glewInit() != GLEW_OK)
         throw std::runtime_error("glewInit failed");
 
-    Application::GetInstance()->SetGame(game);
-    Application::GetInstance()->EnableKeyCallback();
-    Application::GetInstance()->EnableCursorPosCallback();
-    Application::GetInstance()->EnableResizeWindowCallback();
-    Application::GetInstance()->EnableScrollCallback();
-    Application::GetInstance()->Loop();
-    Application::GetInstance()->DestroyWindow();
+    Application::getInstance()->setGame(game);
+	Application::getInstance()->enableKeyCallback();
+	Application::getInstance()->enableCursorPosCallback();
+	Application::getInstance()->enableResizeWindowCallback();
+	Application::getInstance()->enableScrollCallback();
+    Application::getInstance()->loop();
+    Application::getInstance()->destroyWindow();
 
     delete game;
     return 0;

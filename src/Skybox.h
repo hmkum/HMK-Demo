@@ -9,13 +9,13 @@ namespace hmk
 	{
 	public:
 		Skybox(){}
-		~Skybox(){}
+		~Skybox(){ delete m_mesh; }
 
-		void Load();
-		void Render();
+		void load();
+		void render();
 	private:
-		std::shared_ptr<Mesh> mesh;
-		GLuint vao;
-		GLuint texID;
+		Mesh *m_mesh;
+		GLuint m_vao;
+		GLuint m_texID;
 	};
 }

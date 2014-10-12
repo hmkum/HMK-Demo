@@ -12,11 +12,11 @@ namespace hmk
 		MeshManager();
 		~MeshManager();
 
-		void Add(Mesh *mesh);
-		void Render();
-		Mesh &GetLast();
-		Mesh &Get(unsigned int index);
+		void add(Mesh *mesh);
+		void render();
+		Mesh &getLast();
+		Mesh &get(unsigned int index);
 	private:
-		std::vector<Mesh*> m_Meshes;
+		std::vector<Mesh*> m_meshes;
 	};
 }

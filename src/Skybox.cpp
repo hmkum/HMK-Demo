@@ -10,10 +10,10 @@ const GLenum types[6] = {  GL_TEXTURE_CUBE_MAP_POSITIVE_X,
 		GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
 		GL_TEXTURE_CUBE_MAP_NEGATIVE_Z };
 
-void Skybox::Load()
+void Skybox::load()
 {
-	glGenTextures(1, &texID);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, texID);
+	glGenTextures(1, &m_texID);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, m_texID);
 
 	Magick::Image *img = nullptr;
 	Magick::Blob blob;
@@ -44,10 +44,10 @@ void Skybox::Load()
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-	hmk::ShaderManager::GetInstance()->Use("sky");
-	GLint texLoc = hmk::ShaderManager::GetInstance()->GetUniform("tex");
+	hmk::ShaderManager::getInstance()->use("sky");
+	GLint texLoc = hmk::ShaderManager::getInstance()->getUniform("tex");
 	glUniform1i(texLoc, 0);
-	hmk::ShaderManager::GetInstance()->Use("");
+	hmk::ShaderManager::getInstance()->use("");
 
 	float points[] = {
 			-100.0f,  100.0f, -100.0f,
@@ -97,24 +97,24 @@ void Skybox::Load()
 	glBindBuffer (GL_ARRAY_BUFFER, vbo);
 	glBufferData (GL_ARRAY_BUFFER, 3 * 36 * sizeof (float), &points, GL_STATIC_DRAW);
 
-	glGenVertexArrays (1, &vao);
-	glBindVertexArray (vao);
+	glGenVertexArrays (1, &m_vao);
+	glBindVertexArray (m_vao);
 	glEnableVertexAttribArray (0);
 	glBindBuffer (GL_ARRAY_BUFFER, vbo);
 	glVertexAttribPointer (0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 }
 
-void Skybox::Render()
+void Skybox::render()
 {
 	glDepthMask (GL_FALSE);
 	glCullFace(GL_FRONT);
-	hmk::ShaderManager::GetInstance()->Use("sky");
+	hmk::ShaderManager::getInstance()->use("sky");
 	glActiveTexture (GL_TEXTURE0);
-	glBindTexture (GL_TEXTURE_CUBE_MAP, texID);
-	glBindVertexArray (vao);
+	glBindTexture (GL_TEXTURE_CUBE_MAP, m_texID);
+	glBindVertexArray (m_vao);
 	glDrawArrays (GL_TRIANGLES, 0, 36);
 	glBindVertexArray (0);
-	hmk::ShaderManager::GetInstance()->Use("");
+	hmk::ShaderManager::getInstance()->use("");
 	glCullFace(GL_BACK);
 	glDepthMask (GL_TRUE);
 }
