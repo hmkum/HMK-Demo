@@ -12,8 +12,8 @@ Texture::Texture(std::string filePath, GLint minMagFiler, GLint wrapMode)
         m_image->flip();
         m_image->write(&m_blob, "RGBA");
         Magick::Geometry geometry = m_image->size();
-        m_originalWidth = geometry.width();
-        m_originalHeight = geometry.height();
+        m_width = geometry.width();
+        m_height = geometry.height();
     }catch (Magick::Error &e)
     {
         std::cout << (ERROR + "Loading Texture: " + filePath + "\n" + e.what()) << std::endl;
@@ -68,18 +68,18 @@ GLuint Texture::getTextureID() const
     return m_textureID;
 }
 
-GLfloat Texture::getOriginalWidth() const
+GLfloat Texture::getWidth() const
 {
-    return m_originalWidth;
+    return m_width;
 }
 
-GLfloat Texture::getOriginalHeight() const
+GLfloat Texture::getHeight() const
 {
-    return m_originalHeight;
+    return m_height;
 }
 
 Texture::Texture(Texture const &param) :
-    m_textureID(param.m_textureID), m_originalWidth(param.m_originalWidth), m_originalHeight(param.m_originalHeight)
+    m_textureID(param.m_textureID), m_width(param.m_width), m_height(param.m_height)
 {
 }
 
@@ -88,7 +88,7 @@ const Texture &Texture::operator=(Texture const &param)
     Texture tmp(param);
 
     std::swap(m_textureID, tmp.m_textureID);
-    std::swap(m_originalWidth, tmp.m_originalWidth);
-    std::swap(m_originalHeight, tmp.m_originalHeight);
+    std::swap(m_width, tmp.m_width);
+    std::swap(m_height, tmp.m_height);
     return *this;
 }

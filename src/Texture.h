@@ -22,16 +22,15 @@ public:
 
     GLuint getTextureID() const;
 
-    GLfloat getOriginalWidth() const;
-
-    GLfloat getOriginalHeight() const;
+    GLfloat getWidth() const;
+    GLfloat getHeight() const;
 
 private:
     Magick::Image *m_image;
     Magick::Blob m_blob;
     GLuint m_textureID;
-    GLfloat m_originalWidth;
-    GLfloat m_originalHeight;
+    GLfloat m_width;
+    GLfloat m_height;
 };
 
 }
