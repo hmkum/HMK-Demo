@@ -7,8 +7,8 @@
 #include <GLFW/glfw3.h>
 #include <stdio.h>  /* defines FILENAME_MAX */
 #ifdef WINDOWS
-    #include <direct.h>
-    #define GetCurrentDir _getcwd
+#include <direct.h>
+#define GetCurrentDir _getcwd
 #else
 #include <unistd.h>
 #define GetCurrentDir getcwd
@@ -25,7 +25,7 @@ public:
     float getDeltaTime() const;
     int getFps() const;
     GLFWwindow *getWindow() const;
-	std::string getWorkingDirectory();
+    std::string getWorkingDirectory();
     static Application *getInstance();
 
     virtual void keyCallbackImpl(GLFWwindow *window, int key, int scancode, int action, int mods);
@@ -60,5 +60,5 @@ private:
     int m_FPS;
     double m_time;
     float m_deltaTime;
-	bool m_isFullScreen;
+    bool m_isFullScreen;
 };

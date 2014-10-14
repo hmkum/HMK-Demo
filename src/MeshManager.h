@@ -6,17 +6,17 @@
 
 namespace hmk
 {
-	class MeshManager
-	{
-	public:
-		MeshManager();
-		~MeshManager();
+class MeshManager
+{
+public:
+    MeshManager();
+    ~MeshManager();
 
-		void add(Mesh *mesh);
-		void render();
-		Mesh &getLast();
-		Mesh &get(unsigned int index);
-	private:
-		std::vector<Mesh*> m_meshes;
-	};
+    void add(Mesh *mesh);
+    void render();
+    Mesh &getLast();
+    Mesh &get(unsigned int index);
+private:
+    std::vector<Mesh*> m_meshes;
+};
 }

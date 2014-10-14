@@ -20,17 +20,17 @@ public:
     Game() {}
     virtual ~Game()
     {
-	    delete house;
-	    delete basicShader;
-	    delete skyShader;
-	    delete windmill;
-	    delete deskWorn;
-	    delete stool;
+        delete house;
+        delete basicShader;
+        delete skyShader;
+        delete windmill;
+        delete deskWorn;
+        delete stool;
 
-	    delete basicShader;
-	    delete skyShader;
-	    delete sky;
-	    delete m_MeshManager;
+        delete basicShader;
+        delete skyShader;
+        delete sky;
+        delete m_MeshManager;
     }
 
     virtual void Start();
@@ -53,12 +53,12 @@ private:
     hmk::Program *basicShader, *skyShader;
     hmk::Camera camera;
     hmk::Mesh  *house, *house2, *windmill, *deskWorn, *stool;
-	hmk::Skybox *sky;
-	hmk::MeshManager *m_MeshManager;
-	hmk::Terrain terrain;
-	glm::vec3 color;
-	glm::vec3 sunPos;
-	float sunAngle;
+    hmk::Skybox *sky;
+    hmk::MeshManager *m_MeshManager;
+    hmk::Terrain terrain;
+    glm::vec3 color;
+    glm::vec3 sunPos;
+    float sunAngle;
     double oldMouseX, oldMouseY;
-	bool isWireframe;
+    bool isWireframe;
 };

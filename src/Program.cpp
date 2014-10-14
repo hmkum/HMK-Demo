@@ -47,7 +47,7 @@ Program::Program(std::vector<Shader> const &shaders) : m_programID(0)
         std::vector<char> log(512);
         glGetProgramInfoLog(m_programID, log.size(), nullptr, &log[0]);
         glDeleteProgram(m_programID);
-	    m_programID = 0;
+        m_programID = 0;
         throw std::runtime_error(std::string(ERROR + "Shader linking failed with this message:\n") + &log[0]);
     }
 }
@@ -90,14 +90,14 @@ GLint Program::getUniform(const GLchar *uniformName) const
 }
 
 Program::Program(Program const &param) :
-		m_programID(param.m_programID)
+    m_programID(param.m_programID)
 {
-	std::cout << "cons: " << param.getProgram() << std::endl;
+    std::cout << "cons: " << param.getProgram() << std::endl;
 }
 
 Program const &Program::operator=(Program const &param)
 {
-	Program tmp(param);
-	std::swap(m_programID, tmp.m_programID);
-	return *this;
+    Program tmp(param);
+    std::swap(m_programID, tmp.m_programID);
+    return *this;
 }

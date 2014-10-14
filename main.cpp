@@ -11,8 +11,8 @@ const int HEIGHT = 768;
 
 int main(int argc, char **argv)
 {
-	Magick::InitializeMagick(*argv);
-	Game *game = new Game();
+    Magick::InitializeMagick(*argv);
+    Game *game = new Game();
 
     string windowTitle = "HMK";
     Application::getInstance()->createWindow(WIDTH, HEIGHT, windowTitle, false);
@@ -22,10 +22,10 @@ int main(int argc, char **argv)
         throw std::runtime_error("glewInit failed");
 
     Application::getInstance()->setGame(game);
-	Application::getInstance()->enableKeyCallback();
-	Application::getInstance()->enableCursorPosCallback();
-	Application::getInstance()->enableResizeWindowCallback();
-	Application::getInstance()->enableScrollCallback();
+    Application::getInstance()->enableKeyCallback();
+    Application::getInstance()->enableCursorPosCallback();
+    Application::getInstance()->enableResizeWindowCallback();
+    Application::getInstance()->enableScrollCallback();
     Application::getInstance()->loop();
     Application::getInstance()->destroyWindow();
 

@@ -5,33 +5,33 @@
 
 namespace hmk
 {
-    class Texture
-    {
-    public:
-        Texture(std::string filePath,
-                GLint minMagFiler = GL_LINEAR,
-                GLint wrapMode = GL_CLAMP_TO_EDGE);
+class Texture
+{
+public:
+    Texture(std::string filePath,
+            GLint minMagFiler = GL_LINEAR,
+            GLint wrapMode = GL_CLAMP_TO_EDGE);
 
-        ~Texture();
-	    Texture(const Texture&);
-	    const Texture& operator=(const Texture&);
+    ~Texture();
+    Texture(const Texture&);
+    const Texture& operator=(const Texture&);
 
-	    void bind();
-	    void unbind();
-	    void setParameter(GLenum target, GLenum pname, GLint param);
+    void bind();
+    void unbind();
+    void setParameter(GLenum target, GLenum pname, GLint param);
 
-        GLuint getTextureID() const;
+    GLuint getTextureID() const;
 
-        GLfloat getOriginalWidth() const;
+    GLfloat getOriginalWidth() const;
 
-        GLfloat getOriginalHeight() const;
-        
-    private:
-	    Magick::Image *m_image;
-	    Magick::Blob m_blob;
-        GLuint m_textureID;
-        GLfloat m_originalWidth;
-        GLfloat m_originalHeight;
-    };
-    
+    GLfloat getOriginalHeight() const;
+
+private:
+    Magick::Image *m_image;
+    Magick::Blob m_blob;
+    GLuint m_textureID;
+    GLfloat m_originalWidth;
+    GLfloat m_originalHeight;
+};
+
 }

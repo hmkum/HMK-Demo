@@ -24,7 +24,7 @@ Shader Shader::createFromFile(std::string filePath, GLenum shaderType)
 Shader::Shader(std::string shaderCode, GLenum shaderType, std::string filePath)
 {
     // Create shader object
-	m_shaderID = 0;
+    m_shaderID = 0;
     m_shaderID = glCreateShader(shaderType);
     if(m_shaderID == 0)
         throw std::runtime_error(ERROR + "glCreateShader failed\n");
@@ -44,7 +44,7 @@ Shader::Shader(std::string shaderCode, GLenum shaderType, std::string filePath)
         std::vector<char> log(512);
         glGetShaderInfoLog(m_shaderID, log.size(), nullptr, &log[0]);
         glDeleteShader(m_shaderID);
-	    m_shaderID = 0;
+        m_shaderID = 0;
         throw std::runtime_error(std::string(ERROR + "Shader compilation failed with this message("+filePath+"):\n") + &log[0]);
     }
 }

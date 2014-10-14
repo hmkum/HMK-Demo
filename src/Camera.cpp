@@ -7,13 +7,13 @@ using namespace hmk;
 static const float MaxVerticalAngle = 85.0f; //must be less than 90 to avoid gimbal lock
 
 Camera::Camera() :
-		m_position(0.0f, 0.0f, 1.0f),
-		m_horizontalAngle(0.0f),
-		m_verticalAngle(0.0f),
-		m_fov(50.0f),
-		m_nearPlane(0.01f),
-		m_farPlane(100.0f),
-		m_viewportAspectRatio(4.0f/3.0f)
+    m_position(0.0f, 0.0f, 1.0f),
+    m_horizontalAngle(0.0f),
+    m_verticalAngle(0.0f),
+    m_fov(50.0f),
+    m_nearPlane(0.01f),
+    m_farPlane(100.0f),
+    m_viewportAspectRatio(4.0f/3.0f)
 {
 }
 
@@ -24,12 +24,12 @@ const glm::vec3& Camera::getPosition() const
 
 void Camera::setPosition(const glm::vec3 &_position)
 {
-	m_position = _position;
+    m_position = _position;
 }
 
 void Camera::offsetPosition(const glm::vec3 &offset)
 {
-	m_position += offset;
+    m_position += offset;
 }
 
 float Camera::getFov() const
@@ -40,7 +40,7 @@ float Camera::getFov() const
 void Camera::setFov(float _fov)
 {
     assert(_fov > 0.0f && _fov < 180.0f);
-	m_fov = _fov;
+    m_fov = _fov;
 }
 
 float Camera::getNearPlane() const
@@ -57,8 +57,8 @@ void Camera::setNearAndFarPlanes(float _nearPlane, float _farPlane)
 {
     assert(_nearPlane > 0.0f);
     assert(_farPlane > _nearPlane);
-	m_nearPlane = _nearPlane;
-	m_farPlane = _farPlane;
+    m_nearPlane = _nearPlane;
+    m_farPlane = _farPlane;
 }
 
 glm::mat4 Camera::getOrientation() const
@@ -71,18 +71,18 @@ glm::mat4 Camera::getOrientation() const
 
 void Camera::offsetOrientation(float upAngle, float rightAngle)
 {
-	m_horizontalAngle += rightAngle;
-	m_verticalAngle += upAngle;
-	NormalizeAngles();
+    m_horizontalAngle += rightAngle;
+    m_verticalAngle += upAngle;
+    NormalizeAngles();
 }
 
 void Camera::lookAt(glm::vec3 _position)
 {
     assert(_position != m_position);
     auto direction = glm::normalize(m_position - _position);
-	m_verticalAngle = asinf(direction.y);
-	m_horizontalAngle = -atan2f(-direction.x, -direction.z);
-	NormalizeAngles();
+    m_verticalAngle = asinf(direction.y);
+    m_horizontalAngle = -atan2f(-direction.x, -direction.z);
+    NormalizeAngles();
 }
 
 float Camera::getViewportAspectRatio() const
@@ -93,7 +93,7 @@ float Camera::getViewportAspectRatio() const
 void Camera::setViewportAspectRatio(float _viewportAspectRatio)
 {
     assert(_viewportAspectRatio > 0.0);
-	m_viewportAspectRatio = _viewportAspectRatio;
+    m_viewportAspectRatio = _viewportAspectRatio;
 }
 
 glm::vec3 Camera::getForward() const
@@ -131,13 +131,13 @@ glm::mat4 Camera::getView() const
 
 void Camera::NormalizeAngles()
 {
-	m_horizontalAngle = fmodf(m_horizontalAngle, 360.0f);
+    m_horizontalAngle = fmodf(m_horizontalAngle, 360.0f);
     //fmodf can return negative values, but this will make them all positive
     if(m_horizontalAngle < 0.0f)
-	    m_horizontalAngle += 360.0f;
+        m_horizontalAngle += 360.0f;
 
     if(m_verticalAngle > MaxVerticalAngle)
-	    m_verticalAngle = MaxVerticalAngle;
+        m_verticalAngle = MaxVerticalAngle;
     else if(m_verticalAngle < -MaxVerticalAngle)
-	    m_verticalAngle = -MaxVerticalAngle;
+        m_verticalAngle = -MaxVerticalAngle;
 }
