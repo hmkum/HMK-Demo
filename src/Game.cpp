@@ -107,6 +107,10 @@ void Game::Start()
     color = glm::vec3(0.71f, 0.49f, 0.36f);
     sunAngle = 0.0f;
     sunPos = glm::vec3(cos(sunAngle*3.1415/180.0)*70, sin(sunAngle*3.1415/180.0)*70, 0.0);
+
+    dLight = new hmk::DirectionalLight();
+    dLight->setColor(color);
+    dLight->setOrientation(sunAngle, sunAngle);
 }
 
 /**
@@ -118,6 +122,8 @@ void Game::Update(float dt)
     sunAngle += dt * 30.0f;
     if(sunAngle >= 360.0f)
         sunAngle = -360.0f;
+    dLight->setOrientation(sunAngle, sunAngle);
+
     if(glfwGetKey(Application::getInstance()->getWindow(), 'A'))
         camera.offsetPosition(-10.0f * dt * camera.getRight());
     if(glfwGetKey(Application::getInstance()->getWindow(), 'D'))
@@ -143,6 +149,7 @@ void Game::Render()
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     hmk::ShaderManager::getInstance()->use("basic");
+    dLight->render();
     m_MeshManager->render();
     terrain.render(GL_TRIANGLES);
     hmk::ShaderManager::getInstance()->use("");
@@ -207,11 +214,6 @@ void Game::CameraUpdate()
     hmk::ShaderManager::getInstance()->use("basic");
     hmk::ShaderManager::getInstance()->setUniformf("worldToCameraMatrix", camera.getView());
     hmk::ShaderManager::getInstance()->setUniformf("cameraToClipMatrix", camera.getProjection());
-
-    // Light Update
-    sunPos = glm::vec3(15.0f, cos(sunAngle * 3.1415f / 180.0f) * 30, sin(sunAngle * 3.1415f / 180.0f) * 30);
-    hmk::ShaderManager::getInstance()->setUniformf("light.position", glm::vec4(-glm::normalize(sunPos), 1.0f));
-    hmk::ShaderManager::getInstance()->setUniformf("light.intensity", color);
     hmk::ShaderManager::getInstance()->use("");
 
     hmk::ShaderManager::getInstance()->use("sky");

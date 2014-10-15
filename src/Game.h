@@ -13,6 +13,7 @@
 #include "Skybox.h"
 #include "MeshManager.h"
 #include "Terrain.h"
+#include "DirectionalLight.h"
 
 class Game
 {
@@ -31,6 +32,7 @@ public:
         delete skyShader;
         delete sky;
         delete m_MeshManager;
+        delete dLight;
     }
 
     virtual void Start();
@@ -55,6 +57,7 @@ private:
     hmk::Mesh  *house, *house2, *windmill, *deskWorn, *stool;
     hmk::Skybox *sky;
     hmk::MeshManager *m_MeshManager;
+    hmk::DirectionalLight *dLight;
     hmk::Terrain terrain;
     glm::vec3 color;
     glm::vec3 sunPos;
