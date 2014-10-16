@@ -1,4 +1,6 @@
 #pragma once
+#include "base.h"
+
 #include <GL/glew.h>
 #include <iostream>
 #include <string>
@@ -36,7 +38,7 @@ public:
 
 private:
     bool initScene(const aiScene *scene, const std::string &filename);
-    void initMesh(unsigned int index, const aiMesh *mesh);
+    void initMesh(uint32 index, const aiMesh *mesh);
     bool initMaterials(const aiScene *scene, const std::string &filename);
 
 private:

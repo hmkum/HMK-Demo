@@ -1,7 +1,8 @@
 #pragma once
+#include "base.h"
 
 #include <GL/glew.h>
-#include <Magick++.h>
+#include <string>
 
 namespace hmk
 {
@@ -26,11 +27,12 @@ public:
     GLfloat getHeight() const;
 
 private:
-    Magick::Image *m_image;
-    Magick::Blob m_blob;
     GLuint m_textureID;
-    GLfloat m_width;
-    GLfloat m_height;
+    unsigned char *m_data;
+    int32 m_width;
+    int32 m_height;
+    int32 m_component;
+
 };
 
 }

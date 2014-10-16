@@ -2,22 +2,31 @@
 #include "GLHelper.h"
 #include <stdexcept>
 #include <iostream>
+#include "stb_image.h"
 
 using namespace hmk;
 
 Texture::Texture(std::string filePath, GLint minMagFiler, GLint wrapMode)
 {
-    try {
-        m_image = new Magick::Image(filePath);
-        m_image->flip();
-        m_image->write(&m_blob, "RGBA");
-        Magick::Geometry geometry = m_image->size();
-        m_width = geometry.width();
-        m_height = geometry.height();
-    }catch (Magick::Error &e)
+    m_data = stbi_load(filePath.c_str(), &m_width, &m_height, &m_component, 0);
+
+    if(!m_data)
     {
-        std::cout << (ERROR + "Loading Texture: " + filePath + "\n" + e.what()) << std::endl;
-        delete m_image;
+        std::cout << (ERROR + "Loading Texture: " + filePath + "\n") << std::endl;
+        return ;
+    }
+
+    GLint format;
+    switch(m_component)
+    {
+        case 3:
+            format = GL_RGB;
+            break;
+        case 4:
+            format = GL_RGBA;
+            break;
+        default:
+            format = GL_RGBA;
     }
 
     glGenTextures(1, &m_textureID);
@@ -28,19 +37,20 @@ Texture::Texture(std::string filePath, GLint minMagFiler, GLint wrapMode)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapMode);
     glTexImage2D(GL_TEXTURE_2D,
                  0,
-                 GL_RGBA,
-                 (GLsizei)m_image->columns(),
-                 (GLsizei)m_image->rows(),
+                 format,
+                 (GLsizei)m_width,
+                 (GLsizei)m_height,
                  0,
-                 GL_RGBA,
+                 format,
                  GL_UNSIGNED_BYTE,
-                 m_blob.data());
+                 m_data);
     glGenerateMipmap(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 Texture::~Texture()
 {
+    stbi_image_free(m_data);
     glDeleteTextures(1, &m_textureID);
 }
 

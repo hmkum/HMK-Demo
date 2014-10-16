@@ -17,7 +17,7 @@ Program::Program(std::vector<Shader> const &shaders) : m_programID(0)
         throw std::runtime_error(ERROR + "glCreateProgram failed");
 
     // attach all shaders
-    for(uint8_t i = 0; i < shaders.size(); ++i)
+    for(uint8 i = 0; i < shaders.size(); ++i)
     {
         glAttachShader(m_programID, shaders[i].getShader());
     }
@@ -28,13 +28,13 @@ Program::Program(std::vector<Shader> const &shaders) : m_programID(0)
 
     // We are done with link process
     // now detach the all shaders
-    for(uint8_t i = 0; i < shaders.size(); ++i)
+    for(uint8 i = 0; i < shaders.size(); ++i)
     {
         glDetachShader(m_programID, shaders[i].getShader());
     }
 
     // delete the all shaders
-    for(uint8_t i = 0; i < shaders.size(); ++i)
+    for(uint8 i = 0; i < shaders.size(); ++i)
     {
         glDeleteShader(shaders[i].getShader());
     }

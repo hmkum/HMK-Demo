@@ -3,32 +3,41 @@
 #include "Terrain.h"
 #include "GLHelper.h"
 #include "ShaderManager.h"
+#include "stb_image.h"
 
 using namespace hmk;
 
 bool Terrain::load(std::string heightMap)
 {
-    Magick::Blob blob;
-    try {
-        Magick::Image *img = new Magick::Image(heightMap);
-        img->write(&blob, "GRAY");
-        m_width = (unsigned int) img->rows();
-        m_height = (unsigned int) img->columns();
-    } catch (Magick::Error &e)
+
+    m_data = stbi_load(heightMap.c_str(), &m_width, &m_height, &m_component, 0);
+
+    if(!m_data)
     {
         std::cerr << ERROR << "Could not load terrain" << std::endl;
         return false;
     }
 
-    m_data = (unsigned char*)blob.data();
-    m_lenght = (unsigned int) blob.length();
+    GLint format;
+    switch(m_component)
+    {
+        case 3:
+            format = GL_RGB;
+            break;
+        case 4:
+            format = GL_RGBA;
+            break;
+        default:
+            format = GL_RGBA;
+    }
+
     m_heightScale = 10.0f;
     m_widthScale = 2.0f;
 
     unsigned r, g, b;
-    for(unsigned int z = 0; z < m_height; z++)
+    for(uint32 z = 0; z < m_height; z++)
     {
-        for(unsigned int x = 0; x < m_width; x++)
+        for(uint32 x = 0; x < m_width; x++)
         {
             float _x, _y, _z;
             _x = float(x) * m_widthScale;
@@ -57,9 +66,9 @@ bool Terrain::load(std::string heightMap)
         m_vertData.push_back(d);
 
     // Prepare indices
-    unsigned int triCount = ((m_width - 1) * (m_height - 1));
-    unsigned int widthCount = 0;
-    for(unsigned int i = 0; i < triCount * 2; i++)
+    uint32 triCount = ((m_width - 1) * (m_height - 1));
+    uint32 widthCount = 0;
+    for(uint32 i = 0; i < triCount * 2; i++)
     {
         if(widthCount == (m_width - 1))
         {
@@ -131,9 +140,9 @@ void Terrain::render(GLenum mode)
     glBindVertexArray(0);
 }
 
-void Terrain::getPixel(int x, int y, unsigned &r, unsigned &g, unsigned &b)
+void Terrain::getPixel(uint32 x, uint32 y, unsigned &r, unsigned &g, unsigned &b)
 {
-    size_t index = (x + y * m_width);
+    size_t index = (x + y * m_width) * m_component;
     r = m_data[index];
     g = m_data[index + 1];
     b = m_data[index + 2];

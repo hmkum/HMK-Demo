@@ -18,7 +18,7 @@ bool ModelLoader::loadOBJFile(std::string fileName)
 {
     Assimp::Importer importer;
     const aiScene *scene = importer.ReadFile(fileName, aiProcess_FlipWindingOrder | aiProcess_CalcTangentSpace |
-                                             aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_SortByPType);
+                                             aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_JoinIdenticalVertices | aiProcess_SortByPType);
 
     if(scene)
     {
@@ -34,7 +34,7 @@ bool ModelLoader::loadOBJFile(std::string fileName)
 bool ModelLoader::initScene(const aiScene *scene, const std::string &filename)
 {
     // Initialize the meshes in the scene one by one
-    for (unsigned int i = 0 ; i < scene->mNumMeshes ; i++)
+    for (uint8 i = 0 ; i < scene->mNumMeshes ; i++)
     {
         const aiMesh* mesh = scene->mMeshes[i];
         initMesh(i, mesh);
@@ -48,7 +48,7 @@ bool ModelLoader::initScene(const aiScene *scene, const std::string &filename)
     return initMaterials(scene, filename);
 }
 
-void ModelLoader::initMesh(unsigned int index, const aiMesh *mesh)
+void ModelLoader::initMesh(uint32 index, const aiMesh *mesh)
 {
     const aiVector3D zero3D(0.0f, 0.0f, 0.0f);
     const aiVector3D one3D(1.0f, 1.0f, 1.0f);
@@ -71,7 +71,7 @@ void ModelLoader::initMesh(unsigned int index, const aiMesh *mesh)
         m_vertexNormals.push_back(normal->z);
     }
 
-    for(unsigned int i = 0; i < mesh->mNumFaces; i++)
+    for(uint32 i = 0; i < mesh->mNumFaces; i++)
     {
         const aiFace &face = mesh->mFaces[i];
         m_renderMode = GL_TRIANGLES;
@@ -85,7 +85,7 @@ bool ModelLoader::initMaterials(const aiScene *scene, const std::string &filenam
 {
     bool ret = true;
 
-    for(unsigned int i = 0; i < scene->mNumMaterials; i++)
+    for(uint8 i = 0; i < scene->mNumMaterials; i++)
     {
         const aiMaterial *material = scene->mMaterials[i];
 

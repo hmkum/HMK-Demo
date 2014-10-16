@@ -30,7 +30,7 @@ Mesh &MeshManager::getLast()
     return *m_meshes[m_meshes.size() - 1];
 }
 
-Mesh &MeshManager::get(unsigned int index)
+Mesh &MeshManager::get(uint32 index)
 {
     return *m_meshes[index];
 }

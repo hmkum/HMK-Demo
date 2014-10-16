@@ -106,8 +106,6 @@ void Game::Start()
     */
     color = glm::vec3(0.71f, 0.49f, 0.36f);
     sunAngle = 0.0f;
-    sunPos = glm::vec3(cos(sunAngle*3.1415/180.0)*70, sin(sunAngle*3.1415/180.0)*70, 0.0);
-
     dLight = new hmk::DirectionalLight();
     dLight->setColor(color);
     dLight->setOrientation(sunAngle, sunAngle);
@@ -166,7 +164,7 @@ void Game::Loop()
     Render();
 }
 
-void Game::OnKey(GLFWwindow *window, int key, int scancode, int action, int mods)
+void Game::OnKey(GLFWwindow *window, int32 key, int32 scancode, int32 action, int32 mods)
 {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         Application::getInstance()->destroyWindow();
@@ -174,7 +172,7 @@ void Game::OnKey(GLFWwindow *window, int key, int scancode, int action, int mods
         isWireframe = !isWireframe;
 }
 
-void Game::OnMouseButton(GLFWwindow *window, int button, int action, int mods)
+void Game::OnMouseButton(GLFWwindow *window, int32 button, int32 action, int32 mods)
 {
 }
 
@@ -182,7 +180,7 @@ void Game::OnScroll(GLFWwindow *window, double xOffset, double yOffset)
 {
 }
 
-void Game::OnCursorEnter(GLFWwindow *window, int entered)
+void Game::OnCursorEnter(GLFWwindow *window, int32 entered)
 {
 }
 
@@ -203,7 +201,7 @@ void Game::OnCursorPos(GLFWwindow *window, double xPos, double yPos)
     oldMouseY = yPos;
 }
 
-void Game::OnResize(GLFWwindow *window, int width, int height)
+void Game::OnResize(GLFWwindow *window, int32 width, int32 height)
 {
     camera.setViewportAspectRatio(width / (float) height);
     glViewport(0, 0, (GLsizei)width, (GLsizei)height);

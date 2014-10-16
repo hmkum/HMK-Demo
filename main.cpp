@@ -3,7 +3,7 @@
 #include <GL/glew.h>
 #include "src/Application.h"
 #include <stdexcept>
-#include <Magick++.h>
+
 using namespace std;
 
 const int WIDTH  = 1024;
@@ -11,7 +11,6 @@ const int HEIGHT = 768;
 
 int main(int argc, char **argv)
 {
-    Magick::InitializeMagick(*argv);
     Game *game = new Game();
 
     string windowTitle = "HMK";

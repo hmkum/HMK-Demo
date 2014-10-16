@@ -1,6 +1,8 @@
 #include "Skybox.h"
 #include "GLHelper.h"
 #include "ShaderManager.h"
+#include "stb_image.h"
+
 using namespace hmk;
 
 const GLenum types[6] = {  GL_TEXTURE_CUBE_MAP_POSITIVE_X,
@@ -15,27 +17,39 @@ void Skybox::load()
     glGenTextures(1, &m_texID);
     glBindTexture(GL_TEXTURE_CUBE_MAP, m_texID);
 
-    Magick::Image *img = nullptr;
-    Magick::Blob blob;
-
     std::string filenames[] = {"textures/txStormydays_front.bmp", "textures/txStormydays_back.bmp",
                                "textures/txStormydays_up.bmp","textures/txStormydays_down.bmp",
                                "textures/txStormydays_right.bmp","textures/txStormydays_left.bmp"};
 
-    for(size_t i = 0; i < 6; i++)
+    for(uint8 i = 0; i < 6; i++)
     {
-        try {
-            img = new Magick::Image(PATH + filenames[i]);
-            img->write(&blob, "RGBA");
-        }catch (Magick::Error &e)
+        int32 width, height, comp;
+        unsigned char *data;
+        std::string path = PATH + filenames[i];
+        data = stbi_load(path.c_str(), &width, &height, &comp, 0);
+        if(!data)
         {
-            delete img;
-            throw std::runtime_error(ERROR + "Loading Texture: " + filenames[i] + "\n" + e.what());
+            const char *err = stbi_failure_reason();
+            std::cout << (ERROR + "Loading Texture: " + filenames[i] + "\n") << std::endl;
+            std::cout << err << std::endl;
+            return ;
         }
 
-        glTexImage2D(types[i], 0, GL_RGBA,
-                     (GLsizei)img->columns(), (GLsizei)img->rows(), 0, GL_RGBA, GL_UNSIGNED_BYTE, blob.data());
-        delete img;
+        GLint format;
+        switch(comp)
+        {
+            case 3:
+                format = GL_RGB;
+                break;
+            case 4:
+                format = GL_RGBA;
+                break;
+            default:
+                format = GL_RGBA;
+        }
+        glTexImage2D(types[i], 0, format,
+                     (GLsizei)width, (GLsizei)height, 0, format, GL_UNSIGNED_BYTE, data);
+        stbi_image_free(data);
     }
 
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

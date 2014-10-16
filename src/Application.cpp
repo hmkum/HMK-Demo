@@ -9,7 +9,7 @@ Application* Application::m_instance = nullptr;
  * @brief Create main window
  * @return true if window creation is succeded, otherwise false
  */
-bool Application::createWindow(int width, int height, std::string title, bool isFullScreen)
+bool Application::createWindow(int width, int32 height, std::string title, bool isFullScreen)
 {
     m_width        = width;
     m_height       = height;
@@ -94,7 +94,7 @@ float Application::getDeltaTime() const
     return m_deltaTime;
 }
 
-int Application::getFps() const
+int32 Application::getFps() const
 {
     return m_FPS;
 }
@@ -121,12 +121,12 @@ Application *Application::getInstance()
 // ##################### Input Handling Callback Functions ############################
 
 // These are the callback functions for cursor enter/leave window
-static void CursorEnterCallback(GLFWwindow* window, int entered)
+static void CursorEnterCallback(GLFWwindow* window, int32 entered)
 {
     Application::getInstance()->cursorEnterCallbackImpl(window, entered);
 }
 
-void Application::cursorEnterCallbackImpl(GLFWwindow *window, int entered)
+void Application::cursorEnterCallbackImpl(GLFWwindow *window, int32 entered)
 {
     m_game->OnCursorEnter(window, entered);
 }
@@ -137,12 +137,12 @@ void Application::enableCursorEnterCallback()
 }
 
 // These are the callback functions for keyboard handling
-static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+static void KeyCallback(GLFWwindow* window, int32 key, int32 scancode, int32 action, int32 mods)
 {
     Application::getInstance()->keyCallbackImpl(window, key, scancode, action, mods);
 }
 
-void Application::keyCallbackImpl(GLFWwindow *window, int key, int scancode, int action, int mods)
+void Application::keyCallbackImpl(GLFWwindow *window, int32 key, int32 scancode, int32 action, int32 mods)
 {
     m_game->OnKey(window, key, scancode, action, mods);
 }
@@ -169,12 +169,12 @@ void Application::enableCursorPosCallback()
 }
 
 // These are the callback functions for mouse button actions
-static void MouseButtonCallback(GLFWwindow *window, int button, int action, int mods)
+static void MouseButtonCallback(GLFWwindow *window, int32 button, int32 action, int32 mods)
 {
     Application::getInstance()->mouseButtonCallbackImpl(window, button, action, mods);
 }
 
-void Application::mouseButtonCallbackImpl(GLFWwindow *window, int button, int action, int mods)
+void Application::mouseButtonCallbackImpl(GLFWwindow *window, int32 button, int32 action, int32 mods)
 {
     m_game->OnMouseButton(window, button, action, mods);
 }
@@ -201,12 +201,12 @@ void Application::enableScrollCallback()
     glfwSetScrollCallback(m_mainWindow, ScrollCallback);
 }
 
-static void ResizeWindowCallback(GLFWwindow *window, int width, int height)
+static void ResizeWindowCallback(GLFWwindow *window, int32 width, int32 height)
 {
     Application::getInstance()->resizeWindowImpl(window, width, height);
 }
 
-void Application::resizeWindowImpl(GLFWwindow *window, int width, int height)
+void Application::resizeWindowImpl(GLFWwindow *window, int32 width, int32 height)
 {
     m_game->OnResize(window, width, height);
 }

@@ -1,9 +1,10 @@
 #pragma once
+
+#include "base.h"
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #define GLM_FORCE_RADIANS
-#define GLM_SWIZZLE
-#define GLM_FORCE_PURE
 #include <glm/glm.hpp>
 #include <glm/common.hpp>
 #include "Shader.h"
@@ -41,12 +42,12 @@ public:
     void Loop();
 
     // Event Functions
-    virtual void OnKey(GLFWwindow *window, int key, int scancode, int action, int mods);
-    virtual void OnMouseButton(GLFWwindow *window, int button, int action, int mods);
+    virtual void OnKey(GLFWwindow *window, int32 key, int32 scancode, int32 action, int32 mods);
+    virtual void OnMouseButton(GLFWwindow *window, int32 button, int32 action, int32 mods);
     virtual void OnScroll(GLFWwindow *window, double xOffset, double yOffset);
-    virtual void OnCursorEnter(GLFWwindow *window, int entered);
+    virtual void OnCursorEnter(GLFWwindow *window, int32 entered);
     virtual void OnCursorPos(GLFWwindow *window, double xPos, double yPos);
-    virtual void OnResize(GLFWwindow *window, int width, int height);
+    virtual void OnResize(GLFWwindow *window, int32 width, int32 height);
 
 private:
     void CameraUpdate();
@@ -60,7 +61,6 @@ private:
     hmk::DirectionalLight *dLight;
     hmk::Terrain terrain;
     glm::vec3 color;
-    glm::vec3 sunPos;
     float sunAngle;
     double oldMouseX, oldMouseY;
     bool isWireframe;

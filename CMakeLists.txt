@@ -11,4 +11,4 @@ add_definitions(-std=c++11 -Wall)
 add_executable(${PROJECT_NAME} ${SRC_LIST})
 
 # Libraries to be linked
-target_link_libraries(${PROJ_NAME} glfw GLEW GL assimp Magick++ MagickWand MagickCore z dl)
+target_link_libraries(${PROJ_NAME} glfw GLEW GL assimp)

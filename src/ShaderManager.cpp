@@ -37,6 +37,12 @@ void ShaderManager::use(std::string name)
     }
 }
 
+void ShaderManager::use(GLint program)
+{
+    if(program != getActiveProgram())
+        glUseProgram(program);
+}
+
 GLuint ShaderManager::getProgram(std::string name)
 {
     for(auto &p : m_programs)
@@ -170,7 +176,7 @@ bool ShaderManager::setUniformf(std::string name, glm::vec4 v)
     }
 }
 
-bool ShaderManager::setUniformi(std::string name, int v0)
+bool ShaderManager::setUniformi(std::string name, int32 v0)
 {
     GLint loc = getUniform(name);
     if(loc == -1)
@@ -185,7 +191,7 @@ bool ShaderManager::setUniformi(std::string name, int v0)
     }
 }
 
-bool ShaderManager::setUniformi(std::string name, int v0, int v1)
+bool ShaderManager::setUniformi(std::string name, int32 v0, int32 v1)
 {
     GLint loc = getUniform(name);
     if(loc == -1)
@@ -200,7 +206,7 @@ bool ShaderManager::setUniformi(std::string name, int v0, int v1)
     }
 }
 
-bool ShaderManager::setUniformi(std::string name, int v0, int v1, int v2)
+bool ShaderManager::setUniformi(std::string name, int32 v0, int32 v1, int32 v2)
 {
     GLint loc = getUniform(name);
     if(loc == -1)
@@ -215,7 +221,7 @@ bool ShaderManager::setUniformi(std::string name, int v0, int v1, int v2)
     }
 }
 
-bool ShaderManager::setUniformi(std::string name, int v0, int v1, int v2, int v3)
+bool ShaderManager::setUniformi(std::string name, int32 v0, int32 v1, int32 v2, int32 v3)
 {
     GLint loc = getUniform(name);
     if(loc == -1)

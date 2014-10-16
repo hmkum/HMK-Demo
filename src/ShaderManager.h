@@ -1,5 +1,7 @@
 #pragma once
 
+#include "base.h"
+
 #include <vector>
 #include <map>
 #include <string>
@@ -17,6 +19,7 @@ public:
 
     void addProgram(std::string, Program *program);
     void use(std::string name);
+    void use(GLint program);
     GLint getActiveProgram();
     GLuint getProgram(std::string name);
     GLint getUniform(std::string name);
@@ -27,10 +30,10 @@ public:
     bool setUniformf(std::string name, glm::vec2 v);
     bool setUniformf(std::string name, glm::vec3 v);
     bool setUniformf(std::string name, glm::vec4 v);
-    bool setUniformi(std::string name, int v0);
-    bool setUniformi(std::string name, int v0, int v1);
-    bool setUniformi(std::string name, int v0, int v1, int v2);
-    bool setUniformi(std::string name, int v0, int v1, int v2, int v3);
+    bool setUniformi(std::string name, int32 v0);
+    bool setUniformi(std::string name, int32 v0, int32 v1);
+    bool setUniformi(std::string name, int32 v0, int32 v1, int32 v2);
+    bool setUniformi(std::string name, int32 v0, int32 v1, int32 v2, int32 v3);
     bool setUniformf(std::string name, glm::mat3 m);
     bool setUniformf(std::string name, glm::mat4 m);
 private:
