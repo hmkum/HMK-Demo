@@ -11,7 +11,10 @@ public:
     DirectionalLight();
     ~DirectionalLight();
 
-    void render();
+    void setEnable(bool enable);
+    bool isEnable() const;
+
+    void update();
 
     void setColor(glm::vec3 color);
     void setOrientation(float verticalAngle, float horizontalAngle);
@@ -19,5 +22,6 @@ public:
 private:
     glm::vec3 m_color;
     float m_verticalAngle, m_horizontalAngle;
+    bool m_enable;
 };
 }

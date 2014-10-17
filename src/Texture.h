@@ -1,7 +1,7 @@
 #pragma once
 #include "base.h"
 
-#include <GL/glew.h>
+#include "thirdparty/GL/glew.h"
 #include <string>
 
 namespace hmk

@@ -1,7 +1,7 @@
 #include "Skybox.h"
 #include "GLHelper.h"
 #include "ShaderManager.h"
-#include "stb_image.h"
+#include "thirdparty/stb_image.h"
 
 using namespace hmk;
 

@@ -1,5 +1,5 @@
 #pragma once
-#include <GL/glew.h>
+#include "thirdparty/GL/glew.h"
 #include "ModelLoader.h"
 #include "Texture.h"
 
@@ -20,7 +20,7 @@ public:
 
     bool loadMesh(const std::string &meshName);
     void render();
-    void render(GLuint texID);
+    void render(std::string shaderName);
     Mesh* copy();
 
     Mesh &setPosition(glm::vec3 _pos);

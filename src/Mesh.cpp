@@ -104,20 +104,20 @@ void Mesh::render()
 
 }
 
-void Mesh::render(GLuint texID)
+void Mesh::render(std::string shaderName)
 {
     updateModelMatrix();
 
     glBindVertexArray(m_vao);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, texID);
-    hmk::ShaderManager::getInstance()->use("basic");
+    m_tex->bind();
+    GLint lastProgram = hmk::ShaderManager::getInstance()->getActiveProgram();
+    hmk::ShaderManager::getInstance()->use(shaderName);
     GLint texLoc = hmk::ShaderManager::getInstance()->getUniform("tex");
     glUniform1i(texLoc, 0);
     glDrawElements(m_renderMode, m_indexCount, GL_UNSIGNED_SHORT, 0);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+    m_tex->unbind();
+    hmk::ShaderManager::getInstance()->use(lastProgram);
     glBindVertexArray(0);
-
 }
 
 Mesh* Mesh::copy()

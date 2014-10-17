@@ -14,6 +14,8 @@ void Game::Start()
     oldMouseX = oldMouseY = 0.0;
     isWireframe = false;
 
+    renderer = new hmk::Renderer();
+
     std::vector<hmk::Shader> shaders;
     shaders.push_back(hmk::Shader::createFromFile(PATH + "shaders/vert.shader", GL_VERTEX_SHADER));
     shaders.push_back(hmk::Shader::createFromFile(PATH + "shaders/frag.shader", GL_FRAGMENT_SHADER));
@@ -26,18 +28,23 @@ void Game::Start()
     hmk::ShaderManager::getInstance()->addProgram("basic", basicShader);
     hmk::ShaderManager::getInstance()->addProgram("sky", skyShader);
 
-    camera.setFov(60.0f);
-    camera.setViewportAspectRatio(1024.0f / 768.0f);
-    camera.setNearAndFarPlanes(0.5f, 1000.0f);
-    camera.lookAt(glm::vec3(0.0f, 0.0f, 0.0f));
-    camera.setPosition(glm::vec3(28.0f, 4.0f, 55.0f));
+    camera = new hmk::Camera();
+    camera->setFov(60.0f);
+    camera->setViewportAspectRatio(1024.0f / 768.0f);
+    camera->setNearAndFarPlanes(0.5f, 1000.0f);
+    camera->lookAt(glm::vec3(0.0f, 0.0f, 0.0f));
+    camera->setPosition(glm::vec3(28.0f, 4.0f, 55.0f));
+    renderer->addCamera(camera);
 
     sky = new hmk::Skybox();
     sky->load();
 
-    terrain.load(PATH + "textures/hm.png");
+    terrain = new hmk::Terrain();
+    terrain->load(PATH + "textures/hm.png");
+    renderer->addTerrain(terrain);
 
-    m_MeshManager = new hmk::MeshManager();
+    m_structures = new hmk::MeshLibrary();
+    m_deskStools = new hmk::MeshLibrary();
 
     house = new hmk::Mesh();
     house->loadMesh(PATH + "models/Medieval_House.obj");
@@ -66,21 +73,24 @@ void Game::Start()
     stool->setPosition(glm::vec3(28.6f, 0.0f, 41.4f));
     stool->setScale(glm::vec3(1.3f));
 
-    m_MeshManager->add(house);
-    m_MeshManager->add(house->copy());
-    m_MeshManager->getLast().offsetPosition(glm::vec3(-2.0f, 0.0, -10.0f));
-    m_MeshManager->add(house->copy());
-    m_MeshManager->getLast().offsetPosition(glm::vec3(-4.0f, 0.0, -20.0f));
-    m_MeshManager->add(house2);
-    m_MeshManager->add(windmill);
-    m_MeshManager->add(deskWorn);
-    m_MeshManager->add(stool);
-    m_MeshManager->add(stool->copy());
-    m_MeshManager->getLast().offsetPosition(glm::vec3(2.6f, 0.0, 0.0f));
-    m_MeshManager->add(stool->copy());
-    m_MeshManager->getLast().offsetPosition(glm::vec3(2.6f, 0.0, 1.4f));
-    m_MeshManager->add(stool->copy());
-    m_MeshManager->getLast().offsetPosition(glm::vec3(0.0f, 0.0, 1.4f));
+    m_structures->add(house);
+    m_structures->add(house->copy());
+    m_structures->getLast().offsetPosition(glm::vec3(-2.0f, 0.0, -10.0f));
+    m_structures->add(house->copy());
+    m_structures->getLast().offsetPosition(glm::vec3(-4.0f, 0.0, -20.0f));
+    m_structures->add(house2);
+    m_structures->add(windmill);
+    m_deskStools->add(deskWorn);
+    m_deskStools->add(stool);
+    m_deskStools->add(stool->copy());
+    m_deskStools->getLast().offsetPosition(glm::vec3(2.6f, 0.0, 0.0f));
+    m_deskStools->add(stool->copy());
+    m_deskStools->getLast().offsetPosition(glm::vec3(2.6f, 0.0, 1.4f));
+    m_deskStools->add(stool->copy());
+    m_deskStools->getLast().offsetPosition(glm::vec3(0.0f, 0.0, 1.4f));
+
+    renderer->addMeshLibrary(m_structures);
+    renderer->addMeshLibrary(m_deskStools);
 
     // Set fog parameters
     hmk::ShaderManager::getInstance()->use("basic");
@@ -109,6 +119,7 @@ void Game::Start()
     dLight = new hmk::DirectionalLight();
     dLight->setColor(color);
     dLight->setOrientation(sunAngle, sunAngle);
+    dLight->setEnable(true);
 }
 
 /**
@@ -121,15 +132,16 @@ void Game::Update(float dt)
     if(sunAngle >= 360.0f)
         sunAngle = -360.0f;
     dLight->setOrientation(sunAngle, sunAngle);
+    dLight->update();
 
     if(glfwGetKey(Application::getInstance()->getWindow(), 'A'))
-        camera.offsetPosition(-10.0f * dt * camera.getRight());
+        camera->offsetPosition(-10.0f * dt * camera->getRight());
     if(glfwGetKey(Application::getInstance()->getWindow(), 'D'))
-        camera.offsetPosition(10.0f * dt * camera.getRight());
+        camera->offsetPosition(10.0f * dt * camera->getRight());
     if(glfwGetKey(Application::getInstance()->getWindow(), 'W'))
-        camera.offsetPosition(50.0f * dt * camera.getForward());
+        camera->offsetPosition(50.0f * dt * camera->getForward());
     if(glfwGetKey(Application::getInstance()->getWindow(), 'S'))
-        camera.offsetPosition(-50.0f * dt * camera.getForward());
+        camera->offsetPosition(-50.0f * dt * camera->getForward());
 }
 
 /**
@@ -147,9 +159,7 @@ void Game::Render()
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     hmk::ShaderManager::getInstance()->use("basic");
-    dLight->render();
-    m_MeshManager->render();
-    terrain.render(GL_TRIANGLES);
+    renderer->render();
     hmk::ShaderManager::getInstance()->use("");
 
     sky->render();
@@ -196,26 +206,21 @@ void Game::OnCursorPos(GLFWwindow *window, double xPos, double yPos)
         first = false;
     }
     const float sensitivity = 0.25f;
-    camera.offsetOrientation(dy * sensitivity, dx * sensitivity);
+    camera->offsetOrientation(dy * sensitivity, dx * sensitivity);
     oldMouseX = xPos;
     oldMouseY = yPos;
 }
 
 void Game::OnResize(GLFWwindow *window, int32 width, int32 height)
 {
-    camera.setViewportAspectRatio(width / (float) height);
+    camera->setViewportAspectRatio(width / (float) height);
     glViewport(0, 0, (GLsizei)width, (GLsizei)height);
 }
 
 void Game::CameraUpdate()
 {
-    hmk::ShaderManager::getInstance()->use("basic");
-    hmk::ShaderManager::getInstance()->setUniformf("worldToCameraMatrix", camera.getView());
-    hmk::ShaderManager::getInstance()->setUniformf("cameraToClipMatrix", camera.getProjection());
-    hmk::ShaderManager::getInstance()->use("");
-
     hmk::ShaderManager::getInstance()->use("sky");
-    hmk::ShaderManager::getInstance()->setUniformf("worldToCameraMatrix", camera.getOrientation());
-    hmk::ShaderManager::getInstance()->setUniformf("cameraToClipMatrix", camera.getProjection());
+    hmk::ShaderManager::getInstance()->setUniformf("worldToCameraMatrix", camera->getOrientation());
+    hmk::ShaderManager::getInstance()->setUniformf("cameraToClipMatrix", camera->getProjection());
     hmk::ShaderManager::getInstance()->use("");
 }

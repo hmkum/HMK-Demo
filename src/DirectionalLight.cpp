@@ -10,7 +10,17 @@ DirectionalLight::~DirectionalLight()
 {
 }
 
-void DirectionalLight::render()
+void DirectionalLight::setEnable(bool enable)
+{
+    m_enable = enable;
+}
+
+bool DirectionalLight::isEnable() const
+{
+    return m_enable;
+}
+
+void DirectionalLight::update()
 {
     GLint lastProgram = hmk::ShaderManager::getInstance()->getActiveProgram();
     hmk::ShaderManager::getInstance()->use("basic");

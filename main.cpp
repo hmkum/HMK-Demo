@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
-#include <GL/glew.h>
+#define GLEW_STATIC
+#include "src/thirdparty/GL/glew.h"
 #include "src/Application.h"
 #include <stdexcept>
 

@@ -2,7 +2,7 @@
 
 #include "base.h"
 
-#include <GL/glew.h>
+#include "thirdparty/GL/glew.h"
 #include <GLFW/glfw3.h>
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
@@ -12,9 +12,10 @@
 #include "Mesh.h"
 #include "Camera.h"
 #include "Skybox.h"
-#include "MeshManager.h"
+#include "MeshLibrary.h"
 #include "Terrain.h"
 #include "DirectionalLight.h"
+#include "Renderer.h"
 
 class Game
 {
@@ -32,8 +33,12 @@ public:
         delete basicShader;
         delete skyShader;
         delete sky;
-        delete m_MeshManager;
+        delete m_structures;
+        delete m_deskStools;
         delete dLight;
+        delete camera;
+        delete terrain;
+        delete renderer;
     }
 
     virtual void Start();
@@ -53,13 +58,14 @@ private:
     void CameraUpdate();
 
 private:
+    hmk::Renderer *renderer;
     hmk::Program *basicShader, *skyShader;
-    hmk::Camera camera;
+    hmk::Camera *camera;
     hmk::Mesh  *house, *house2, *windmill, *deskWorn, *stool;
     hmk::Skybox *sky;
-    hmk::MeshManager *m_MeshManager;
+    hmk::MeshLibrary *m_structures, *m_deskStools;
     hmk::DirectionalLight *dLight;
-    hmk::Terrain terrain;
+    hmk::Terrain *terrain;
     glm::vec3 color;
     float sunAngle;
     double oldMouseX, oldMouseY;

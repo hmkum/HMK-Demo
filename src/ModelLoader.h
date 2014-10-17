@@ -1,15 +1,15 @@
 #pragma once
 #include "base.h"
 
-#include <GL/glew.h>
+#include "thirdparty/GL/glew.h"
 #include <iostream>
 #include <string>
 #include <fstream>
 #include <vector>
 #include <sstream>
-#include "assimp/Importer.hpp"
-#include "assimp/scene.h"
-#include "assimp/postprocess.h"
+#include "thirdparty/assimp/Importer.hpp"
+#include "thirdparty/assimp/scene.h"
+#include "thirdparty/assimp/postprocess.h"
 
 namespace hmk
 {

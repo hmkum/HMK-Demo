@@ -1,9 +1,9 @@
 #include <iostream>
-#include <GL/glew.h>
+#include "thirdparty/GL/glew.h"
 #include "Terrain.h"
 #include "GLHelper.h"
 #include "ShaderManager.h"
-#include "stb_image.h"
+#include "thirdparty/stb_image.h"
 
 using namespace hmk;
 
@@ -18,26 +18,13 @@ bool Terrain::load(std::string heightMap)
         return false;
     }
 
-    GLint format;
-    switch(m_component)
-    {
-        case 3:
-            format = GL_RGB;
-            break;
-        case 4:
-            format = GL_RGBA;
-            break;
-        default:
-            format = GL_RGBA;
-    }
-
     m_heightScale = 10.0f;
     m_widthScale = 2.0f;
 
     unsigned r, g, b;
-    for(uint32 z = 0; z < m_height; z++)
+    for(int32 z = 0; z < m_height; z++)
     {
-        for(uint32 x = 0; x < m_width; x++)
+        for(int32 x = 0; x < m_width; x++)
         {
             float _x, _y, _z;
             _x = float(x) * m_widthScale;
@@ -67,7 +54,7 @@ bool Terrain::load(std::string heightMap)
 
     // Prepare indices
     uint32 triCount = ((m_width - 1) * (m_height - 1));
-    uint32 widthCount = 0;
+    int32 widthCount = 0;
     for(uint32 i = 0; i < triCount * 2; i++)
     {
         if(widthCount == (m_width - 1))
