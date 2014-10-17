@@ -24,12 +24,19 @@ public:
 
     void setEnableFog(bool fogEnable);
     bool isFogEnable() const;
+
+    void setEnableAmbientLight(bool ambientLight);
+    void setAmbientLightColor(glm::vec3 color);
+    bool isAmbientLightEnable() const;
 private:
     std::vector<hmk::MeshLibrary*> m_meshes;
     hmk::Camera *m_camera;
     hmk::Terrain *m_terrain;
     hmk::Fog *m_fog;
 
+    glm::vec3 m_ambientLightColor;
+
     bool m_fogEnable;
+    bool m_ambientLightEnable;
 };
 }

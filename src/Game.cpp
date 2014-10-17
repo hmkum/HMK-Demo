@@ -124,6 +124,10 @@ void Game::Start()
     dLight->setColor(color);
     dLight->setOrientation(sunAngle, sunAngle);
     dLight->setEnable(true);
+
+    // Enable ambient light
+    renderer->setAmbientLightColor(glm::vec3(0.05f));
+    renderer->setEnableAmbientLight(true);
 }
 
 /**
