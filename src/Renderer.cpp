@@ -8,6 +8,8 @@ Renderer::Renderer()
 {
     m_camera = nullptr;
     m_terrain = nullptr;
+    m_fog = nullptr;
+    m_fogEnable = false;
 }
 
 void Renderer::render()
@@ -38,6 +40,18 @@ void Renderer::render()
     {
         m_terrain->render(GL_TRIANGLES);
     }
+
+    // Render fog
+    if(m_fogEnable)
+    {
+        GLint lastProgram = hmk::ShaderManager::getInstance()->getActiveProgram();
+        hmk::ShaderManager::getInstance()->use("basic");
+        hmk::ShaderManager::getInstance()->setUniformf("fogParams.color", m_fog->getColor());
+        hmk::ShaderManager::getInstance()->setUniformi("fogParams.equation", m_fog->getEquation());
+        hmk::ShaderManager::getInstance()->setUniformf("fogParams.start", m_fog->getStart());
+        hmk::ShaderManager::getInstance()->setUniformf("fogParams.end", m_fog->getEnd());
+        hmk::ShaderManager::getInstance()->use(lastProgram);
+    }
 }
 
 void Renderer::addMeshLibrary(hmk::MeshLibrary *mesh)
@@ -55,4 +69,34 @@ void Renderer::addTerrain(hmk::Terrain *terrain)
 {
     assert(terrain != nullptr);
     m_terrain = terrain;
+}
+
+void Renderer::addFog(Fog *fog)
+{
+    assert(fog != nullptr);
+    m_fog = fog;
+}
+
+void Renderer::setEnableFog(bool fogEnable)
+{
+    m_fogEnable = fogEnable;
+    if(m_fogEnable)
+    {
+        GLint lastProgram = hmk::ShaderManager::getInstance()->getActiveProgram();
+        hmk::ShaderManager::getInstance()->use("basic");
+        hmk::ShaderManager::getInstance()->setUniformi("isFogEnable", 1);
+        hmk::ShaderManager::getInstance()->use(lastProgram);
+    }
+    else
+    {
+        GLint lastProgram = hmk::ShaderManager::getInstance()->getActiveProgram();
+        hmk::ShaderManager::getInstance()->use("basic");
+        hmk::ShaderManager::getInstance()->setUniformi("isFogEnable", 0);
+        hmk::ShaderManager::getInstance()->use(lastProgram);
+    }
+}
+
+bool Renderer::isFogEnable() const
+{
+    return m_fogEnable;
 }

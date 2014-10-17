@@ -14,8 +14,10 @@ void Game::Start()
     oldMouseX = oldMouseY = 0.0;
     isWireframe = false;
 
+    window = Application::getInstance()->getWindow();
     renderer = new hmk::Renderer();
 
+    // Load shaders then create programs
     std::vector<hmk::Shader> shaders;
     shaders.push_back(hmk::Shader::createFromFile(PATH + "shaders/vert.shader", GL_VERTEX_SHADER));
     shaders.push_back(hmk::Shader::createFromFile(PATH + "shaders/frag.shader", GL_FRAGMENT_SHADER));
@@ -28,6 +30,7 @@ void Game::Start()
     hmk::ShaderManager::getInstance()->addProgram("basic", basicShader);
     hmk::ShaderManager::getInstance()->addProgram("sky", skyShader);
 
+    // Setting up camera
     camera = new hmk::Camera();
     camera->setFov(60.0f);
     camera->setViewportAspectRatio(1024.0f / 768.0f);
@@ -36,14 +39,18 @@ void Game::Start()
     camera->setPosition(glm::vec3(28.0f, 4.0f, 55.0f));
     renderer->addCamera(camera);
 
+    // Load Sky
     sky = new hmk::Skybox();
     sky->load();
 
+    // Create terrain
     terrain = new hmk::Terrain();
     terrain->load(PATH + "textures/hm.png");
     renderer->addTerrain(terrain);
 
+    // Hold house and windmill
     m_structures = new hmk::MeshLibrary();
+    // House deskworn and stools
     m_deskStools = new hmk::MeshLibrary();
 
     house = new hmk::Mesh();
@@ -93,12 +100,9 @@ void Game::Start()
     renderer->addMeshLibrary(m_deskStools);
 
     // Set fog parameters
-    hmk::ShaderManager::getInstance()->use("basic");
-    hmk::ShaderManager::getInstance()->setUniformf("fogParams.color", glm::vec4(0.7f, 0.7f, 0.7f, 1.0f));
-    hmk::ShaderManager::getInstance()->setUniformi("fogParams.equation", 0);
-    hmk::ShaderManager::getInstance()->setUniformf("fogParams.start", 0.01f);
-    hmk::ShaderManager::getInstance()->setUniformf("fogParams.end", 200.0f);
-    hmk::ShaderManager::getInstance()->use("");
+    fog = new hmk::Fog(glm::vec4(0.7f, 0.7f, 0.7f, 1.0f), 0.01f, 200.0f);
+    renderer->addFog(fog);
+    renderer->setEnableFog(true);
 
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
@@ -134,13 +138,13 @@ void Game::Update(float dt)
     dLight->setOrientation(sunAngle, sunAngle);
     dLight->update();
 
-    if(glfwGetKey(Application::getInstance()->getWindow(), 'A'))
+    if(glfwGetKey(window, 'A'))
         camera->offsetPosition(-10.0f * dt * camera->getRight());
-    if(glfwGetKey(Application::getInstance()->getWindow(), 'D'))
+    if(glfwGetKey(window, 'D'))
         camera->offsetPosition(10.0f * dt * camera->getRight());
-    if(glfwGetKey(Application::getInstance()->getWindow(), 'W'))
+    if(glfwGetKey(window, 'W'))
         camera->offsetPosition(50.0f * dt * camera->getForward());
-    if(glfwGetKey(Application::getInstance()->getWindow(), 'S'))
+    if(glfwGetKey(window, 'S'))
         camera->offsetPosition(-50.0f * dt * camera->getForward());
 }
 
@@ -180,6 +184,10 @@ void Game::OnKey(GLFWwindow *window, int32 key, int32 scancode, int32 action, in
         Application::getInstance()->destroyWindow();
     if(key == GLFW_KEY_SPACE && action == GLFW_PRESS)
         isWireframe = !isWireframe;
+
+    // CTRL + F  enable/disable fog
+    if(key == GLFW_KEY_F && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
+        renderer->setEnableFog(!renderer->isFogEnable());
 }
 
 void Game::OnMouseButton(GLFWwindow *window, int32 button, int32 action, int32 mods)

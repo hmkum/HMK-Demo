@@ -6,6 +6,7 @@
 #include "MeshLibrary.h"
 #include "Camera.h"
 #include "Terrain.h"
+#include "Fog.h"
 
 namespace hmk
 {
@@ -19,9 +20,16 @@ public:
     void addMeshLibrary(hmk::MeshLibrary *meshMgr);
     void addCamera(hmk::Camera *camera);
     void addTerrain(hmk::Terrain *terrain);
+    void addFog(hmk::Fog *fog);
+
+    void setEnableFog(bool fogEnable);
+    bool isFogEnable() const;
 private:
     std::vector<hmk::MeshLibrary*> m_meshes;
     hmk::Camera *m_camera;
     hmk::Terrain *m_terrain;
+    hmk::Fog *m_fog;
+
+    bool m_fogEnable;
 };
 }

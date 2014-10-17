@@ -26,6 +26,7 @@ struct FogParameters
    int equation; // 0 = linear, 1 = exp, 2 = exp2
 };
 uniform FogParameters fogParams;
+uniform bool isFogEnable;
 
 float getFogFactor(FogParameters params, float fogCoord)
 {
@@ -53,7 +54,10 @@ void main()
 
     outColor = lightColor * texture(tex, fragTexCoords);
 
-    // Add fog
-    float fogCoord = abs(fragEyeSpacePos.z/fragEyeSpacePos.w);
-    outColor = mix(outColor, fogParams.color, getFogFactor(fogParams, fogCoord));
+	if(isFogEnable)
+	{
+    	// Add fog
+    	float fogCoord = abs(fragEyeSpacePos.z/fragEyeSpacePos.w);
+    	outColor = mix(outColor, fogParams.color, getFogFactor(fogParams, fogCoord));
+    }
 }

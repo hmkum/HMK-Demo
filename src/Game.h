@@ -14,6 +14,7 @@
 #include "Skybox.h"
 #include "MeshLibrary.h"
 #include "Terrain.h"
+#include "Fog.h"
 #include "DirectionalLight.h"
 #include "Renderer.h"
 
@@ -38,6 +39,7 @@ public:
         delete dLight;
         delete camera;
         delete terrain;
+        delete fog;
         delete renderer;
     }
 
@@ -58,6 +60,7 @@ private:
     void CameraUpdate();
 
 private:
+    GLFWwindow *window;
     hmk::Renderer *renderer;
     hmk::Program *basicShader, *skyShader;
     hmk::Camera *camera;
@@ -66,6 +69,7 @@ private:
     hmk::MeshLibrary *m_structures, *m_deskStools;
     hmk::DirectionalLight *dLight;
     hmk::Terrain *terrain;
+    hmk::Fog *fog;
     glm::vec3 color;
     float sunAngle;
     double oldMouseX, oldMouseY;
