@@ -127,7 +127,6 @@ void Game::Start()
 
     // Enable ambient light
     renderer->setAmbientLightColor(glm::vec3(0.05f));
-    renderer->setEnableAmbientLight(true);
 }
 
 /**

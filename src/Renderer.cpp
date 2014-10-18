@@ -10,7 +10,6 @@ Renderer::Renderer()
     m_terrain = nullptr;
     m_fog = nullptr;
     m_fogEnable = false;
-    m_ambientLightEnable = false;
     m_ambientLightColor = glm::vec3(0.05f);
 }
 
@@ -52,15 +51,6 @@ void Renderer::render()
         hmk::ShaderManager::getInstance()->setUniformi("fogParams.equation", m_fog->getEquation());
         hmk::ShaderManager::getInstance()->setUniformf("fogParams.start", m_fog->getStart());
         hmk::ShaderManager::getInstance()->setUniformf("fogParams.end", m_fog->getEnd());
-        hmk::ShaderManager::getInstance()->use(lastProgram);
-    }
-
-    // Render ambient light
-    if(m_ambientLightEnable)
-    {
-        GLint lastProgram = hmk::ShaderManager::getInstance()->getActiveProgram();
-        hmk::ShaderManager::getInstance()->use("basic");
-        hmk::ShaderManager::getInstance()->setUniformf("ambientLight", m_ambientLightColor);
         hmk::ShaderManager::getInstance()->use(lastProgram);
     }
 }
@@ -112,31 +102,13 @@ bool Renderer::isFogEnable() const
     return m_fogEnable;
 }
 
-void Renderer::setEnableAmbientLight(bool ambientLight)
-{
-    m_ambientLightEnable = ambientLight;
-    if(m_ambientLightEnable)
-    {
-        GLint lastProgram = hmk::ShaderManager::getInstance()->getActiveProgram();
-        hmk::ShaderManager::getInstance()->use("basic");
-        hmk::ShaderManager::getInstance()->setUniformi("isAmbientLightEnable", 1);
-        hmk::ShaderManager::getInstance()->use(lastProgram);
-    }
-    else
-    {
-        GLint lastProgram = hmk::ShaderManager::getInstance()->getActiveProgram();
-        hmk::ShaderManager::getInstance()->use("basic");
-        hmk::ShaderManager::getInstance()->setUniformi("isAmbientLightEnable", 0);
-        hmk::ShaderManager::getInstance()->use(lastProgram);
-    }
-}
-
 void Renderer::setAmbientLightColor(glm::vec3 color)
 {
     m_ambientLightColor = color;
-}
 
-bool Renderer::isAmbientLightEnable() const
-{
-    return m_ambientLightEnable;
+    // Render ambient light
+    GLint lastProgram = hmk::ShaderManager::getInstance()->getActiveProgram();
+    hmk::ShaderManager::getInstance()->use("basic");
+    hmk::ShaderManager::getInstance()->setUniformf("ambientLight", m_ambientLightColor);
+    hmk::ShaderManager::getInstance()->use(lastProgram);
 }

@@ -27,7 +27,6 @@ struct FogParameters
 };
 uniform FogParameters fogParams;
 uniform bool isFogEnable;
-uniform bool isAmbientLightEnable;
 uniform vec3 ambientLight;
 
 float getFogFactor(FogParameters params, float fogCoord)
@@ -51,11 +50,7 @@ void main()
     vec3 eyeNorm = normalize(normalMatrix * fragVertexNormal);
 
     highp float sunDirection = max(dot(eyeNorm.xyz, -vec3(light.position)), 0.0);
-    vec4 lightColor;
-    if(isAmbientLightEnable)
-        lightColor = vec4(ambientLight + (light.intensity * sunDirection), 0.0f);
-    else
-        lightColor = vec4((light.intensity * sunDirection), 0.0f);
+    vec4 lightColor = vec4(ambientLight + (light.intensity * sunDirection), 0.0f);
 
     outColor = lightColor * texture(tex, fragTexCoords);
 
