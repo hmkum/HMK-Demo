@@ -6,12 +6,13 @@ uniform mat4 modelToWorldMatrix; // Model Matrix
 in vec2 fragTexCoords;
 in vec3 fragVertexNormal;
 in vec4 fragEyeSpacePos;
+in mat3 normalMatrix;
 out vec4 outColor;
 
 struct LightInfo
 {
-	vec4 position;
-	vec3 intensity;
+        vec4 position;
+        vec3 intensity;
 };
 uniform LightInfo light;
 
@@ -45,7 +46,6 @@ float getFogFactor(FogParameters params, float fogCoord)
 
 void main()
 {
-    mat3 normalMatrix = transpose(inverse(mat3(modelToWorldMatrix)));
     vec3 eyeNorm = normalize(normalMatrix * fragVertexNormal);
 
     highp float sunDirection = max(dot(eyeNorm.xyz, -vec3(light.position)), 0.0);
@@ -56,7 +56,7 @@ void main()
     if(isFogEnable)
     {
         // Add fog
-    	float fogCoord = abs(fragEyeSpacePos.z/fragEyeSpacePos.w);
-    	outColor = mix(outColor, fogParams.color, getFogFactor(fogParams, fogCoord));
+        float fogCoord = abs(fragEyeSpacePos.z/fragEyeSpacePos.w);
+        outColor = mix(outColor, fogParams.color, getFogFactor(fogParams, fogCoord));
     }
 }

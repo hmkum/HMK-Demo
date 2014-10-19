@@ -48,7 +48,7 @@ Program::Program(std::vector<Shader> const &shaders) : m_programID(0)
         glGetProgramInfoLog(m_programID, log.size(), nullptr, &log[0]);
         glDeleteProgram(m_programID);
         m_programID = 0;
-        throw std::runtime_error(std::string(ERROR + "Shader linking failed with this message:\n") + &log[0]);
+        std::cout << std::string(ERROR + "Shader linking failed with this message:\n")  << &log[0];
     }
 }
 
