@@ -123,7 +123,7 @@ void Game::Start()
     dLight = new hmk::DirectionalLight();
     dLight->setColor(color);
     dLight->setOrientation(sunAngle, sunAngle);
-    dLight->setEnable(true);
+    dLight->enable();
 
     // Enable ambient light
     renderer->setAmbientLightColor(glm::vec3(0.05f));
@@ -191,6 +191,9 @@ void Game::OnKey(GLFWwindow *window, int32 key, int32 scancode, int32 action, in
     // CTRL + F  enable/disable fog
     if(key == GLFW_KEY_F && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
         renderer->setEnableFog(!renderer->isFogEnable());
+    // CTRL + 1 enable/disable directional light
+    if(key == GLFW_KEY_1 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
+        dLight->isEnable() ? dLight->disable() : dLight->enable();
 }
 
 void Game::OnMouseButton(GLFWwindow *window, int32 button, int32 action, int32 mods)

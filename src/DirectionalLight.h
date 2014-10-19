@@ -11,7 +11,8 @@ public:
     DirectionalLight();
     ~DirectionalLight();
 
-    void setEnable(bool enable);
+    void enable();
+    void disable();
     bool isEnable() const;
 
     void update();

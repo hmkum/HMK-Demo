@@ -10,9 +10,14 @@ DirectionalLight::~DirectionalLight()
 {
 }
 
-void DirectionalLight::setEnable(bool enable)
+void DirectionalLight::enable()
 {
-    m_enable = enable;
+    m_enable = true;
+}
+
+void DirectionalLight::disable()
+{
+    m_enable = false;
 }
 
 bool DirectionalLight::isEnable() const
@@ -22,12 +27,15 @@ bool DirectionalLight::isEnable() const
 
 void DirectionalLight::update()
 {
-    GLint lastProgram = hmk::ShaderManager::getInstance()->getActiveProgram();
-    hmk::ShaderManager::getInstance()->use("basic");
-    hmk::ShaderManager::getInstance()->setUniformf("light.position", glm::vec4(-glm::normalize(getOrientation()), 1.0f));
-    hmk::ShaderManager::getInstance()->setUniformf("light.intensity", m_color);
-    hmk::ShaderManager::getInstance()->use("");
-    hmk::ShaderManager::getInstance()->use(lastProgram);
+    if(m_enable)
+    {
+        GLint lastProgram = hmk::ShaderManager::getInstance()->getActiveProgram();
+        hmk::ShaderManager::getInstance()->use("basic");
+        hmk::ShaderManager::getInstance()->setUniformf("light.position", glm::vec4(-glm::normalize(getOrientation()), 1.0f));
+        hmk::ShaderManager::getInstance()->setUniformf("light.intensity", m_color);
+        hmk::ShaderManager::getInstance()->use("");
+        hmk::ShaderManager::getInstance()->use(lastProgram);
+    }
 }
 
 void DirectionalLight::setColor(glm::vec3 color)
