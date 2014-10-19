@@ -3,7 +3,6 @@
 uniform sampler2D tex;
 uniform mat4 modelToWorldMatrix; // Model Matrix
 
-in vec4 fragVertexPosition;
 in vec2 fragTexCoords;
 in vec3 fragVertexNormal;
 in vec4 fragEyeSpacePos;
