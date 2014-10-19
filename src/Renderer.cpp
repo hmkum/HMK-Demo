@@ -41,7 +41,6 @@ void Renderer::render()
     // Render terrain
     if(m_terrain)
     {
-        hmk::ShaderManager::getInstance()->use("fog");
         m_terrain->render(GL_TRIANGLES);
     }
 
@@ -49,7 +48,7 @@ void Renderer::render()
     if(m_fogEnable)
     {
         GLint lastProgram = hmk::ShaderManager::getInstance()->getActiveProgram();
-        hmk::ShaderManager::getInstance()->use("fog");
+        hmk::ShaderManager::getInstance()->use("basic");
         hmk::ShaderManager::getInstance()->setUniformf("fogParams.color", m_fog->getColor());
         hmk::ShaderManager::getInstance()->setUniformi("fogParams.equation", m_fog->getEquation());
         hmk::ShaderManager::getInstance()->setUniformf("fogParams.start", m_fog->getStart());
