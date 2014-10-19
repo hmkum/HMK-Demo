@@ -48,7 +48,7 @@ void main()
 {
     vec3 eyeNorm = normalize(normalMatrix * fragVertexNormal);
 
-    highp float sunDirection = max(dot(eyeNorm.xyz, -vec3(light.position)), 0.0);
+    float sunDirection = max(dot(eyeNorm.xyz, -vec3(light.position)), 0.0);
     vec4 lightColor = vec4(ambientLight + (light.intensity * sunDirection), 0.0f);
 
     outColor = lightColor * texture(tex, fragTexCoords);
