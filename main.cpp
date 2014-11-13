@@ -3,6 +3,7 @@
 #define GLEW_STATIC
 #include "src/thirdparty/GL/glew.h"
 #include "src/Application.h"
+#include "src/WindowsApplication.h"
 #include <stdexcept>
 
 using namespace std;
@@ -15,20 +16,25 @@ int main(int argc, char **argv)
     Game *game = new Game();
 
     string windowTitle = "HMK";
-    Application::getInstance()->createWindow(WIDTH, HEIGHT, windowTitle, false);
+
+#ifdef _WIN32
+	hmk::Application *app = new hmk::WindowsApplication();
+#endif
+#ifdef __linux__
+	hmk::Application *app = new hmk::LinuxApplication();
+#endif
+	if(app->Initialize(windowTitle, WIDTH, HEIGHT))
+	{
+		app->CreateWindow();
+		app->SetGame(game);
+	}
 
     glewExperimental = true;
     if(glewInit() != GLEW_OK)
-        throw std::runtime_error("glewInit failed");
+       cerr << "glewInit failed" << std::endl;
 
-    Application::getInstance()->setGame(game);
-    Application::getInstance()->enableKeyCallback();
-    Application::getInstance()->enableCursorPosCallback();
-    Application::getInstance()->enableResizeWindowCallback();
-    Application::getInstance()->enableScrollCallback();
-    Application::getInstance()->loop();
-    Application::getInstance()->destroyWindow();
-
+	app->MainLoop();
+	app->DestroyWindow();
     delete game;
     return 0;
 }

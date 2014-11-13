@@ -11,10 +11,15 @@ void Game::Start()
 {
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
-    oldMouseX = oldMouseY = 0.0;
+	isRightMouseClicked = false;
     isWireframe = false;
 
-    window = Application::getInstance()->getWindow();
+	for(int i = 0; i < 322; i++)
+	{
+		keys[i] = false;
+	}
+
+    //window = Application::getInstance()->getWindow();
     renderer = new hmk::Renderer();
 
     // Load shaders then create programs
@@ -140,15 +145,24 @@ void Game::Update(float dt)
         sunAngle = -360.0f;
     dLight->setOrientation(sunAngle, sunAngle);
     dLight->update();
-
-    if(glfwGetKey(window, 'A'))
-        camera->offsetPosition(-10.0f * dt * camera->getRight());
-    if(glfwGetKey(window, 'D'))
-        camera->offsetPosition(10.0f * dt * camera->getRight());
-    if(glfwGetKey(window, 'W'))
-        camera->offsetPosition(50.0f * dt * camera->getForward());
-    if(glfwGetKey(window, 'S'))
-        camera->offsetPosition(-50.0f * dt * camera->getForward());
+	
+	// Camera movement
+	if(keys[SDLK_w])
+	{
+		camera->offsetPosition(10.0f * 0.04f * camera->getForward());
+	}
+	if(keys[SDLK_s])
+	{
+		camera->offsetPosition(-10.0f * 0.04f * camera->getForward());
+	}
+	if(keys[SDLK_d])
+	{
+		camera->offsetPosition(10.0f * 0.04f * camera->getRight());
+	}
+	if(keys[SDLK_a])
+	{
+		camera->offsetPosition(-10.0f * 0.04f * camera->getRight());
+	}
 }
 
 /**
@@ -177,55 +191,58 @@ void Game::Render()
  */
 void Game::Loop()
 {
-    Update(Application::getInstance()->getDeltaTime());
+    Update(0.02f);
     Render();
 }
 
-void Game::OnKey(GLFWwindow *window, int32 key, int32 scancode, int32 action, int32 mods)
+void Game::OnKeyDown(SDL_Keysym keysym)
 {
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-        Application::getInstance()->destroyWindow();
-    if(key == GLFW_KEY_SPACE && action == GLFW_PRESS)
+    if(keysym.sym == SDLK_SPACE)
         isWireframe = !isWireframe;
 
     // CTRL + F  enable/disable fog
-    if(key == GLFW_KEY_F && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
+	if(keysym.sym == SDLK_f)
         renderer->setEnableFog(!renderer->isFogEnable());
     // CTRL + 1 enable/disable directional light
-    if(key == GLFW_KEY_1 && action == GLFW_PRESS && mods == GLFW_MOD_CONTROL)
-        dLight->isEnable() ? dLight->disable() : dLight->enable();
+	if(keysym.sym == SDLK_1)
+        dLight->isEnable() ? dLight->disable() : dLight->enable(); 
+
+	keys[keysym.sym] = true;
 }
 
-void Game::OnMouseButton(GLFWwindow *window, int32 button, int32 action, int32 mods)
+void Game::OnKeyUp(SDL_Keysym keysym)
+{
+	keys[keysym.sym] = false;
+}
+
+void Game::OnMouseButtonDown(SDL_MouseButtonEvent e)
+{
+	if(e.button == SDL_BUTTON_RIGHT)
+	{
+		isRightMouseClicked = true;
+	}
+}
+
+void Game::OnMouseButtonUp(SDL_MouseButtonEvent e)
+{
+	if(e.button == SDL_BUTTON_RIGHT)
+	{
+		isRightMouseClicked = false;
+	}
+}
+
+void Game::OnMouseWheel(int32 xOffset, int32 yOffset)
 {
 }
 
-void Game::OnScroll(GLFWwindow *window, double xOffset, double yOffset)
+void Game::OnMouseMotion(SDL_MouseMotionEvent e)
 {
+	const float sensitivity = 0.15f;
+	if(isRightMouseClicked)
+		camera->offsetOrientation(e.yrel * sensitivity, e.xrel * sensitivity);
 }
 
-void Game::OnCursorEnter(GLFWwindow *window, int32 entered)
-{
-}
-
-void Game::OnCursorPos(GLFWwindow *window, double xPos, double yPos)
-{
-    float dx = (float) (xPos - oldMouseX);
-    float dy = (float) (yPos - oldMouseY);
-    static bool first = true;
-    if(first)
-    {
-        dx = 0.0f;
-        dy = 0.0f;
-        first = false;
-    }
-    const float sensitivity = 0.25f;
-    camera->offsetOrientation(dy * sensitivity, dx * sensitivity);
-    oldMouseX = xPos;
-    oldMouseY = yPos;
-}
-
-void Game::OnResize(GLFWwindow *window, int32 width, int32 height)
+void Game::OnResize(int32 width, int32 height)
 {
     camera->setViewportAspectRatio(width / (float) height);
     glViewport(0, 0, (GLsizei)width, (GLsizei)height);

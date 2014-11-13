@@ -22,7 +22,8 @@ Mesh::Mesh(const Mesh &other) :
 
 Mesh::~Mesh()
 {
-    delete m_tex;
+	if(m_tex)
+		delete m_tex;
 }
 const Mesh &Mesh::operator=(Mesh const &param)
 {
@@ -82,7 +83,8 @@ bool Mesh::loadMesh(const std::string &meshName)
 
         glBindVertexArray(0);
 
-        m_tex = new Texture(PATH + "textures/" + model.getTextureName(), GL_LINEAR, GL_REPEAT);
+        m_tex = new Texture();
+		m_tex->Initialize(PATH + "textures/" + model.getTextureName(), GL_LINEAR, GL_REPEAT);
 
         return true;
     }

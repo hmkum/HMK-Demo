@@ -3,12 +3,120 @@
 #include <stdexcept>
 #include <chrono>
 
+using namespace hmk;
+
+Application::Application()
+: mainWindow(nullptr), mainGlContext(nullptr)
+{
+	windowTitle = "HMK - OpenGL";
+	windowWidth = 800;
+	windowHeight = 600;
+}
+
+Application::~Application()
+{
+	//SDL_DestroyRenderer(mainRenderer);
+	SDL_DestroyWindow(mainWindow);
+}
+
+bool Application::Initialize(std::string title, int32 width, int32 height)
+{
+	if(SDL_Init(SDL_INIT_EVERYTHING) < 0)
+	{
+		std::cerr << "Error: SDL_Init(SDL_INIT_EVERYTHING)" << std::endl;
+		return false;
+	}
+
+	windowTitle = title;
+	windowWidth = width;
+	windowHeight = height;
+
+	return true;
+}
+
+bool Application::CreateWindow()
+{
+	mainWindow = SDL_CreateWindow(windowTitle.c_str(), 30, 30, windowWidth, windowHeight, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
+	if(mainWindow == nullptr)
+	{
+		std::cerr << "Error: SDL_CreateWindow()" << std::endl;
+		return false;
+	}
+
+	mainGlContext = SDL_GL_CreateContext(mainWindow);
+	SDL_GL_MakeCurrent(mainWindow, mainGlContext);
+
+	return true;
+}
+
+void Application::MainLoop()
+{
+	game->Start();
+	while(true)
+	{	
+		SDL_Event event;
+		while(SDL_PollEvent(&event))
+		{
+			switch(event.type)
+			{
+			case SDL_MOUSEMOTION:
+				game->OnMouseMotion(event.motion);
+				break;
+			case SDL_MOUSEBUTTONDOWN:
+				game->OnMouseButtonDown(event.button);
+				break;
+			case SDL_MOUSEBUTTONUP:
+				game->OnMouseButtonUp(event.button);
+				break;
+			case SDL_MOUSEWHEEL:
+				game->OnMouseWheel(event.wheel.x, event.wheel.y);
+				break;
+			case SDL_KEYDOWN:
+				game->OnKeyDown(event.key.keysym);
+				break;
+			case SDL_KEYUP:
+				game->OnKeyUp(event.key.keysym);
+				break;
+			case SDL_WINDOWEVENT:
+				if(event.window.event == SDL_WINDOWEVENT_RESIZED)
+				{
+					game->OnResize(event.window.data1, event.window.data2);
+				}
+				break;
+			case SDL_DROPFILE:
+				std::cout << "Drop file: " << event.drop.file << std::endl;
+				break;
+			case SDL_QUIT:
+				DestroyWindow();
+				break;
+			default:
+				break;
+			}
+		}
+		game->Loop();
+		SDL_GL_SwapWindow(mainWindow);
+	}
+}
+
+void Application::SetGame(Game *g)
+{
+	assert(g != nullptr);
+	game = g;
+}
+
+void Application::DestroyWindow()
+{
+	SDL_DestroyWindow(mainWindow);
+	exit(0);
+}
+
+/*
 Application* Application::m_instance = nullptr;
 
 /**
  * @brief Create main window
  * @return true if window creation is succeded, otherwise false
- */
+ 
 bool Application::createWindow(int width, int32 height, std::string title, bool isFullScreen)
 {
     m_width        = width;
@@ -114,7 +222,8 @@ std::string Application::getWorkingDirectory()
 Application *Application::getInstance()
 {
     if(!m_instance)
-        m_instance = new Application();
+		m_instance = new Application();
+	
     return m_instance;
 }
 
@@ -215,3 +324,4 @@ void Application::enableResizeWindowCallback()
 {
     glfwSetFramebufferSizeCallback(m_mainWindow, ResizeWindowCallback);
 }
+*/

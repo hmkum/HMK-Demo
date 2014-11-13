@@ -6,46 +6,8 @@
 
 using namespace hmk;
 
-Texture::Texture(std::string filePath, GLint minMagFiler, GLint wrapMode)
+Texture::Texture()
 {
-    m_data = stbi_load(filePath.c_str(), &m_width, &m_height, &m_component, 0);
-
-    if(!m_data)
-    {
-        std::cout << (ERROR + "Loading Texture: " + filePath + "\n") << std::endl;
-        return ;
-    }
-
-    GLint format;
-    switch(m_component)
-    {
-        case 3:
-            format = GL_RGB;
-            break;
-        case 4:
-            format = GL_RGBA;
-            break;
-        default:
-            format = GL_RGBA;
-    }
-
-    glGenTextures(1, &m_textureID);
-    glBindTexture(GL_TEXTURE_2D, m_textureID);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minMagFiler);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, minMagFiler);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapMode);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapMode);
-    glTexImage2D(GL_TEXTURE_2D,
-                 0,
-                 format,
-                 (GLsizei)m_width,
-                 (GLsizei)m_height,
-                 0,
-                 format,
-                 GL_UNSIGNED_BYTE,
-                 m_data);
-    glGenerateMipmap(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 Texture::~Texture()
@@ -54,6 +16,47 @@ Texture::~Texture()
     glDeleteTextures(1, &m_textureID);
 }
 
+void Texture::Initialize(std::string filePath, GLint minMagFiler, GLint wrapMode)
+{
+	m_data = stbi_load(filePath.c_str(), &m_width, &m_height, &m_component, 0);
+
+	if(!m_data)
+	{
+		std::cout << (ERROR + "Loading Texture: " + filePath + "\n") << std::endl;
+		return;
+	}
+
+	GLint format;
+	switch(m_component)
+	{
+	case 3:
+		format = GL_RGB;
+		break;
+	case 4:
+		format = GL_RGBA;
+		break;
+	default:
+		format = GL_RGBA;
+	}
+
+	glGenTextures(1, &m_textureID);
+	glBindTexture(GL_TEXTURE_2D, m_textureID);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minMagFiler);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, minMagFiler);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapMode);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapMode);
+	glTexImage2D(GL_TEXTURE_2D,
+		0,
+		format,
+		(GLsizei)m_width,
+		(GLsizei)m_height,
+		0,
+		format,
+		GL_UNSIGNED_BYTE,
+		m_data);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
 
 void Texture::bind()
 {

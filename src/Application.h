@@ -6,21 +6,42 @@
 #include <cassert>
 #include <iostream>
 #include "Game.h"
-#include <GLFW/glfw3.h>
-#include <stdio.h>  /* defines FILENAME_MAX */
-#ifdef WINDOWS
-#include <direct.h>
-#define GetCurrentDir _getcwd
-#else
-#include <unistd.h>
-#define GetCurrentDir getcwd
-#endif
+#include <thirdparty/sdl/SDL.h>
 
+
+namespace hmk
+{
+
+class Application
+{
+public: 
+	Application();
+	~Application();
+
+	virtual bool Initialize(std::string title, int32 width, int32 height);
+	virtual bool CreateWindow();
+	virtual void MainLoop();
+	virtual void DestroyWindow();
+	virtual void SetGame(Game *g);
+
+protected:
+	SDL_Window *mainWindow;
+	SDL_GLContext mainGlContext;
+
+	std::string windowTitle;
+	uint16 windowWidth, windowHeight;
+
+	Game *game;
+};
+
+}
+
+/*
 class Application
 {
 public:
 
-    bool createWindow(int32 width, int32 height, std::string title, bool isFullScreen);
+    virtual bool createWindow(int32 width, int32 height, std::string title, bool isFullScreen);
     void destroyWindow();
     void setGame(Game *game);
     void loop();
@@ -64,3 +85,4 @@ private:
     float m_deltaTime;
     bool m_isFullScreen;
 };
+*/

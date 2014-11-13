@@ -1,6 +1,6 @@
 #pragma once
 #define GLM_FORCE_RADIANS
-#include <glm/glm.hpp>
+#include <thirdparty/glm/glm.hpp>
 
 namespace hmk {
 

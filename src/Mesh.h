@@ -4,8 +4,8 @@
 #include "Texture.h"
 
 #define GLM_FORCE_RADIANS
-#include <glm/glm.hpp>
-#include <glm/ext.hpp>
+#include "thirdparty/glm/glm.hpp"
+#include "thirdparty/glm/ext.hpp"
 #include <memory>
 
 namespace hmk
@@ -36,9 +36,9 @@ private:
     void updateModelMatrix();
 
 private:
+	Texture *m_tex;
     glm::mat4 m_modelMatrix;
     glm::vec3 m_position, m_rotation, m_scale;
-    Texture *m_tex;
     float m_angle;
     GLuint m_vao, m_vbo, m_ibo;
     GLsizei m_indexCount;

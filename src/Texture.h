@@ -9,14 +9,14 @@ namespace hmk
 class Texture
 {
 public:
-    Texture(std::string filePath,
-            GLint minMagFiler = GL_LINEAR,
-            GLint wrapMode = GL_CLAMP_TO_EDGE);
-
+    Texture();
     ~Texture();
     Texture(const Texture&);
     const Texture& operator=(const Texture&);
 
+	void Initialize(std::string filePath,
+					GLint minMagFiler = GL_LINEAR,
+					GLint wrapMode = GL_CLAMP_TO_EDGE);
     void bind();
     void unbind();
     void setParameter(GLenum target, GLenum pname, GLint param);

@@ -2,11 +2,11 @@
 
 #include "base.h"
 
-#include "thirdparty/GL/glew.h"
-#include <GLFW/glfw3.h>
+#include <thirdparty/GL/glew.h>
+#include <thirdparty/sdl/SDL.h>
 #define GLM_FORCE_RADIANS
-#include <glm/glm.hpp>
-#include <glm/common.hpp>
+#include <thirdparty/glm/glm.hpp>
+#include <thirdparty/glm/common.hpp>
 #include "Shader.h"
 #include "Program.h"
 #include "Mesh.h"
@@ -49,18 +49,18 @@ public:
     void Loop();
 
     // Event Functions
-    virtual void OnKey(GLFWwindow *window, int32 key, int32 scancode, int32 action, int32 mods);
-    virtual void OnMouseButton(GLFWwindow *window, int32 button, int32 action, int32 mods);
-    virtual void OnScroll(GLFWwindow *window, double xOffset, double yOffset);
-    virtual void OnCursorEnter(GLFWwindow *window, int32 entered);
-    virtual void OnCursorPos(GLFWwindow *window, double xPos, double yPos);
-    virtual void OnResize(GLFWwindow *window, int32 width, int32 height);
+    void OnKeyDown(SDL_Keysym keysym);
+	void OnKeyUp(SDL_Keysym keysym);
+    void OnMouseButtonDown(SDL_MouseButtonEvent e);
+	void OnMouseButtonUp(SDL_MouseButtonEvent e);
+    void OnMouseWheel(int32 xOffset, int32 yOffset);
+    void OnMouseMotion(SDL_MouseMotionEvent e);
+    void OnResize(int32 width, int32 height);
 
 private:
     void CameraUpdate();
 
 private:
-    GLFWwindow *window;
     hmk::Renderer *renderer;
     hmk::Program *basicShader, *skyShader;
     hmk::Camera *camera;
@@ -72,6 +72,8 @@ private:
     hmk::Fog *fog;
     glm::vec3 color;
     float sunAngle;
-    double oldMouseX, oldMouseY;
+	bool keys[259]; // SDL's all key
     bool isWireframe;
+	bool isRightMouseClicked;
+	
 };

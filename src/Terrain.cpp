@@ -108,7 +108,8 @@ bool Terrain::load(std::string heightMap)
 
     glBindVertexArray(0);
 
-    tex = new Texture(PATH + "textures/grass1.png", GL_LINEAR, GL_REPEAT);
+    tex = new Texture();
+	tex->Initialize(PATH + "textures/grass1.png", GL_LINEAR, GL_REPEAT);
 
     return true;
 }

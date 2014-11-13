@@ -12,4 +12,4 @@ add_definitions(-std=c++11 -Wall)
 add_executable(${PROJECT_NAME} ${SRC_LIST})
 
 # Libraries to be linked
-target_link_libraries(${PROJ_NAME} glfw GL assimp)
+target_link_libraries(${PROJ_NAME} SDL2 GL assimp)
